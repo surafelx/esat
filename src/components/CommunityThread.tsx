@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
-import { MessageSquare, ThumbsUp, Clock, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { MessageSquare } from "lucide-react";
 
 interface Thread {
   id: string;
@@ -14,58 +13,25 @@ interface Thread {
   tags: string[];
 }
 
-const sampleThreads: Thread[] = [
-  {
-    id: "1",
-    author: "Sarah Chen",
-    avatar: "SC",
-    title: "How does attention mechanism differ from RNN memory?",
-    preview: "I'm trying to understand the fundamental difference between how transformers and RNNs handle sequence information...",
-    replies: 12,
-    votes: 34,
-    time: "2h ago",
-    tags: ["Deep Learning", "NLP"],
-  },
-  {
-    id: "2",
-    author: "Marcus R.",
-    avatar: "MR",
-    title: "Best practices for feature engineering in tabular data?",
-    preview: "Working on a Kaggle competition and curious about the community's approach to feature creation...",
-    replies: 8,
-    votes: 21,
-    time: "5h ago",
-    tags: ["ML", "Feature Engineering"],
-  },
-  {
-    id: "3",
-    author: "Priya K.",
-    avatar: "PK",
-    title: "Gradient vanishing in deep networks — practical solutions",
-    preview: "I compiled a list of techniques that helped me address vanishing gradients. Sharing here for others...",
-    replies: 19,
-    votes: 56,
-    time: "1d ago",
-    tags: ["Deep Learning", "Tips"],
-  },
-  {
-    id: "4",
-    author: "Alex Wong",
-    avatar: "AW",
-    title: "Building a RAG pipeline — architecture decisions",
-    preview: "For my capstone project, I'm implementing retrieval-augmented generation. Would love feedback on my architecture...",
-    replies: 7,
-    votes: 15,
-    time: "3h ago",
-    tags: ["AI Engineering", "RAG"],
-  },
-];
-
 interface CommunityThreadProps {
   threads?: Thread[];
 }
 
-const CommunityThread = ({ threads = sampleThreads }: CommunityThreadProps) => {
+const CommunityThread = ({ threads = [] }: CommunityThreadProps) => {
+  if (threads.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-center py-12">
+        <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
+          <MessageSquare className="w-8 h-8 text-muted-foreground" />
+        </div>
+        <h3 className="text-lg font-display font-semibold text-foreground mb-2">No discussions yet</h3>
+        <p className="text-sm text-muted-foreground max-w-xs">
+          Be the first to start a conversation!
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
       {threads.map((thread, i) => (
@@ -80,7 +46,9 @@ const CommunityThread = ({ threads = sampleThreads }: CommunityThreadProps) => {
             {/* Vote column */}
             <div className="flex flex-col items-center gap-1 pt-1">
               <button className="w-8 h-8 rounded-lg bg-muted hover:bg-primary/10 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors">
-                <ThumbsUp className="w-3.5 h-3.5" />
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
               </button>
               <span className="text-xs font-semibold text-foreground">{thread.votes}</span>
             </div>
@@ -92,10 +60,7 @@ const CommunityThread = ({ threads = sampleThreads }: CommunityThreadProps) => {
                 </div>
                 <span className="text-xs text-muted-foreground">{thread.author}</span>
                 <span className="text-xs text-muted-foreground/50">·</span>
-                <span className="text-xs text-muted-foreground flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  {thread.time}
-                </span>
+                <span className="text-xs text-muted-foreground">{thread.time}</span>
               </div>
 
               <h4 className="font-display font-semibold text-sm text-foreground group-hover:text-primary transition-colors mb-1">

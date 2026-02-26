@@ -1,7 +1,7 @@
 import Sidebar from "@/components/Sidebar";
 import CommunityThread from "@/components/CommunityThread";
 import { motion } from "framer-motion";
-import { Users, TrendingUp, MessageSquare, Search, Zap, Clock, ThumbsUp } from "lucide-react";
+import { MessageSquare, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -9,32 +9,11 @@ const Community = () => {
   const [filter, setFilter] = useState("all");
   const filters = ["all", "Deep Learning", "ML", "AI Engineering", "NLP"];
 
-  const statButtons = [
-    { label: "2,341 Members", icon: Users, color: "text-blue-500", bg: "bg-blue-500/10" },
-    { label: "156 Threads", icon: MessageSquare, color: "text-green-500", bg: "bg-green-500/10" },
-    { label: "92% Response", icon: ThumbsUp, color: "text-purple-500", bg: "bg-purple-500/10" },
-    { label: "89% Solved", icon: Zap, color: "text-orange-500", bg: "bg-orange-500/10" },
-  ];
-
   return (
     <div className="min-h-screen gradient-surface">
       <Sidebar />
       <main className="pl-16 md:pl-20 h-screen">
-        {/* Tiny stat buttons above the card */}
-        <div className="p-4 pb-2 flex gap-2">
-          {statButtons.map((stat, i) => (
-            <button
-              key={i}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg ${stat.bg} border border-border/50 hover:border-primary/30 transition-all`}
-            >
-              <stat.icon className={`w-3.5 h-3.5 ${stat.color}`} />
-              <span className="text-xs font-medium text-foreground">{stat.label}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Big card container that fills the page */}
-        <div className="p-4 pt-2 h-[calc(100vh-80px)]">
+        <div className="p-4 pt-2 h-[calc(100vh-32px)]">
           <div className="bg-card border border-border rounded-2xl h-full overflow-hidden flex">
             <div className="flex-1 overflow-y-auto p-6">
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-4">
