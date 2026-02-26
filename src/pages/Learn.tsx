@@ -100,7 +100,7 @@ const Learn = () => {
 
         {/* Main Content */}
         <div className="flex-1 p-4 pt-2 min-h-0 overflow-hidden">
-          <div className="bg-card border border-border/50 rounded-2xl h-full overflow-hidden">
+          <div className="bg-card border border-border/50 rounded-2xl h-full overflow-hidden scrollbar-fire">
             <AnimatePresence mode="wait">
               {/* COURSES VIEW */}
               {view === "courses" && (
@@ -109,7 +109,7 @@ const Learn = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="h-full overflow-y-auto p-6"
+                  className="h-full overflow-y-auto p-6 scrollbar-fire"
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
                     {courses.map((course: any, i: number) => {
@@ -151,7 +151,7 @@ const Learn = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="h-full overflow-y-auto p-6"
+                  className="h-full overflow-y-auto p-6 scrollbar-fire"
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
                     {selectedCourse.modules?.map((module: any, i: number) => (
@@ -193,7 +193,7 @@ const Learn = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="h-full overflow-y-auto p-6"
+                  className="h-full overflow-y-auto p-6 scrollbar-fire"
                 >
                   <div className="max-w-3xl mx-auto">
                     {/* Roadmap Nodes */}
@@ -271,13 +271,13 @@ const Learn = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="h-full overflow-y-auto p-6"
+                  className="h-full flex flex-col"
                 >
-                  <div className="max-w-2xl mx-auto">
-                    {/* Lesson Header */}
-                    <div className="mb-6">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className={`px-2 py-1 rounded text-xs font-medium uppercase ${
+                  {/* Lesson Header - Clean & Simple */}
+                  <div className="px-6 py-3 border-b border-border/50 shrink-0">
+                    <div className="max-w-3xl mx-auto">
+                      <div className="flex items-center gap-3 mb-1">
+                        <span className={`px-2.5 py-0.5 rounded-md text-xs font-medium uppercase tracking-wide ${
                           selectedModule.lessons[currentLessonIndex].type === "video" ? "bg-blue-500/20 text-blue-400" :
                           selectedModule.lessons[currentLessonIndex].type === "concept" ? "bg-purple-500/20 text-purple-400" :
                           selectedModule.lessons[currentLessonIndex].type === "discourse" ? "bg-green-500/20 text-green-400" :
@@ -292,57 +292,169 @@ const Learn = () => {
                           {selectedModule.lessons[currentLessonIndex].duration}
                         </span>
                       </div>
-                      <h2 className="text-2xl font-display font-bold text-foreground mb-2">
-                        {selectedModule.lessons[currentLessonIndex].title}
-                      </h2>
-                      <p className="text-muted-foreground">
-                        {selectedModule.lessons[currentLessonIndex].description}
-                      </p>
+                      <h2 className="text-xl font-display font-bold text-foreground">{selectedModule.lessons[currentLessonIndex].title}</h2>
                     </div>
+                  </div>
 
-                    {/* Lesson Content Placeholder */}
-                    <div className="p-8 rounded-2xl bg-muted/30 border border-border text-center">
-                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)] flex items-center justify-center mx-auto mb-4">
-                        {(() => {
-                          const IconComponent = lessonTypeIcons[selectedModule.lessons[currentLessonIndex].type] || BookOpen;
-                          return <IconComponent className="w-10 h-10 text-white" />;
-                        })()}
+                  {/* Content Area - More Space */}
+                  <div className="flex-1 overflow-y-auto p-4 scrollbar-fire">
+                    <div className="max-w-3xl mx-auto pb-24">
+                      <div className="rounded-2xl bg-card border border-border/50 shadow-sm overflow-hidden">
+                        {/* Video Lesson */}
+                        {selectedModule.lessons[currentLessonIndex].type === "video" && (
+                          <div className="p-5">
+                            <div className="aspect-video rounded-xl bg-black/80 flex items-center justify-center mb-5 overflow-hidden shadow-inner">
+                              {(() => {
+                                const videoUrl = selectedModule.lessons[currentLessonIndex].content?.videoUrl || '';
+                                const isYouTube = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be');
+                                
+                                if (isYouTube && videoUrl) {
+                                  let embedUrl = videoUrl;
+                                  if (videoUrl.includes('youtube.com/watch')) {
+                                    const videoId = new URL(videoUrl).searchParams.get('v');
+                                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                                  } else if (videoUrl.includes('youtu.be/')) {
+                                    const videoId = videoUrl.split('youtu.be/')[1]?.split('?')[0];
+                                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                                  }
+                                  return (
+                                    <iframe 
+                                      src={embedUrl}
+                                      className="w-full h-full"
+                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                      allowFullScreen
+                                    />
+                                  );
+                                } else if (videoUrl) {
+                                  return (
+                                    <iframe 
+                                      src={videoUrl}
+                                      className="w-full h-full"
+                                      allowFullScreen
+                                    />
+                                  );
+                                }
+                                return <Play className="w-12 h-12 text-muted-foreground" />;
+                              })()}
+                            </div>
+                            <div className="bg-muted/30 rounded-lg p-5">
+                              <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{selectedModule.lessons[currentLessonIndex].content?.transcript}</p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Concept Lesson */}
+                        {selectedModule.lessons[currentLessonIndex].type === "concept" && (
+                          <div className="p-5 space-y-5">
+                            {selectedModule.lessons[currentLessonIndex].content?.sections?.map((section: any, i: number) => (
+                              <div key={i} className="bg-muted/30 rounded-lg p-5">
+                                <h4 className="text-base font-semibold text-foreground mb-3 flex items-center gap-2">
+                                  <span className="w-6 h-6 rounded-full bg-[hsl(0,84%,55%)]/20 flex items-center justify-center text-[hsl(0,84%,55%)] text-xs font-bold">{i + 1}</span>
+                                  {section.title}
+                                </h4>
+                                <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">{section.body}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Blog Lesson */}
+                        {selectedModule.lessons[currentLessonIndex].type === "blog" && (
+                          <div className="p-5 space-y-5">
+                            <div className="bg-gradient-to-r from-orange-500/10 to-amber-500/10 rounded-lg p-5 border-l-4 border-orange-500">
+                              <p className="text-base text-foreground font-medium">{selectedModule.lessons[currentLessonIndex].content?.summary}</p>
+                            </div>
+                            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">{selectedModule.lessons[currentLessonIndex].content?.body}</p>
+                            {selectedModule.lessons[currentLessonIndex].content?.keyPoints && (
+                              <div className="bg-muted/30 rounded-lg p-5">
+                                <h4 className="text-sm font-semibold text-foreground mb-3">Key Takeaways</h4>
+                                <ul className="space-y-2">
+                                  {selectedModule.lessons[currentLessonIndex].content.keyPoints.map((point: string, i: number) => (
+                                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                                      <CheckCircle className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+                                      {point}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Discourse Lesson */}
+                        {selectedModule.lessons[currentLessonIndex].type === "discourse" && (
+                          <div className="p-5 space-y-5">
+                            <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-lg p-5 border-l-4 border-green-500">
+                              <h4 className="text-base font-semibold text-foreground mb-2">Discussion Topic</h4>
+                              <p className="text-sm text-muted-foreground">{selectedModule.lessons[currentLessonIndex].content?.topic}</p>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {selectedModule.lessons[currentLessonIndex].content?.aiEngineering && (
+                                <div className="p-5 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                                  <h5 className="text-sm font-semibold text-blue-400 mb-2">AI Engineering</h5>
+                                  <p className="text-sm text-muted-foreground">{selectedModule.lessons[currentLessonIndex].content.aiEngineering.definition}</p>
+                                </div>
+                              )}
+                              {selectedModule.lessons[currentLessonIndex].content?.mlEngineering && (
+                                <div className="p-5 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                                  <h5 className="text-sm font-semibold text-purple-400 mb-2">ML Engineering</h5>
+                                  <p className="text-sm text-muted-foreground">{selectedModule.lessons[currentLessonIndex].content.mlEngineering.definition}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Interactive Lesson */}
+                        {selectedModule.lessons[currentLessonIndex].type === "interactive" && (
+                          <div className="p-5">
+                            <div className="grid grid-cols-2 gap-4">
+                              {selectedModule.lessons[currentLessonIndex].content?.terms?.slice(0, 4).map((term: any, i: number) => (
+                                <div key={i} className="p-5 rounded-lg bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20">
+                                  <span className="text-sm font-medium text-foreground">{term.term}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <h3 className="font-display font-semibold text-lg text-foreground mb-2">
-                        {selectedModule.lessons[currentLessonIndex].type === "video" && "Video Lesson"}
-                        {selectedModule.lessons[currentLessonIndex].type === "concept" && "Concept Explanation"}
-                        {selectedModule.lessons[currentLessonIndex].type === "discourse" && "AI Discussion"}
-                        {selectedModule.lessons[currentLessonIndex].type === "blog" && "Article"}
-                        {selectedModule.lessons[currentLessonIndex].type === "interactive" && "Interactive Exercise"}
-                        {selectedModule.lessons[currentLessonIndex].type === "quiz" && "Quiz"}
-                      </h3>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Content would be rendered here based on lesson type
-                      </p>
-                      <Button className="bg-gradient-to-r from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)] hover:opacity-90 text-white border-0">
-                        <Play className="w-4 h-4 mr-2" />
-                        Start Lesson
-                      </Button>
                     </div>
+                  </div>
 
-                    {/* Navigation */}
-                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
+                  {/* Navigation - Sticky at Bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-card/95 backdrop-blur-sm border-t border-border/50 shrink-0">
+                    <div className="max-w-3xl mx-auto flex items-center justify-between">
                       <Button 
                         variant="ghost" 
                         onClick={() => currentLessonIndex > 0 && setCurrentLessonIndex(currentLessonIndex - 1)}
                         disabled={currentLessonIndex === 0}
+                        className="gap-2"
                       >
-                        ← Previous
+                          <ChevronRight className="w-4 h-4 rotate-180" />
+                          Previous
                       </Button>
-                      <span className="text-sm text-muted-foreground">
-                        {currentLessonIndex + 1} / {selectedModule.lessons.length}
-                      </span>
+                      <div className="flex items-center gap-3">
+                        {selectedModule.lessons.map((_: any, i: number) => (
+                          <button
+                            key={i}
+                            onClick={() => setCurrentLessonIndex(i)}
+                            className={`w-2 h-2 rounded-full transition-all ${
+                              i === currentLessonIndex 
+                                ? "bg-[hsl(0,84%,55%)] w-6" 
+                                : i < currentLessonIndex 
+                                  ? "bg-green-500" 
+                                  : "bg-muted hover:bg-muted/70"
+                            }`}
+                          />
+                        ))}
+                      </div>
                       <Button 
-                        className="bg-gradient-to-r from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)] hover:opacity-90 text-white border-0"
+                        className="gap-2 bg-[hsl(0,84%,55%)] hover:bg-[hsl(0,84%,45%)] text-white border-0"
                         onClick={() => currentLessonIndex < selectedModule.lessons.length - 1 && setCurrentLessonIndex(currentLessonIndex + 1)}
                         disabled={currentLessonIndex === selectedModule.lessons.length - 1}
                       >
-                        Next →
+                          Next
+                          <ChevronRight className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
