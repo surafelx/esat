@@ -12,6 +12,7 @@ import Assignments from "./pages/Assignments";
 import Meetings from "./pages/Meetings";
 import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/NotFound";
+import TalkToMe from "./components/TalkToMe";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <TalkToMe />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/onboarding" element={<Onboarding />} />
