@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { 
-  ArrowRight, Brain, Target, Zap, Rocket, User, Mail, Lock, Check
+  ArrowRight, Brain, Target, Zap, Rocket, User, Check
 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -30,17 +30,10 @@ const careerPaths = [
   },
 ];
 
-const learningStyles = [
-  { id: "structured", title: "Structured", icon: Target, description: "Guided curriculum" },
-  { id: "project", title: "Project-Based", icon: Rocket, description: "Build real projects" },
-  { id: "flexible", title: "Flexible", icon: Brain, description: "Learn at your pace" },
-];
-
 const Onboarding = () => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({ name: "", email: "" });
+  const [formData, setFormData] = useState({ name: "" });
   const [selectedCareer, setSelectedCareer] = useState("");
-  const [selectedStyle, setSelectedStyle] = useState("");
 
   const handleNext = () => setStep(step + 1);
   const handlePrev = () => setStep(step - 1);
