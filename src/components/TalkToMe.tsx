@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, X, Send, User, MessageSquare } from "lucide-react";
 
-// Use environment variables for secrets
+// Use environment variables for secretsx 
 const WEBHOOK_URL = import.meta.env.VITE_TALKTOME_WEBHOOK_URL;
 const API_KEY = import.meta.env.VITE_MAKE_API_KEY;
 
@@ -76,26 +76,37 @@ const TalkToMe = () => {
 
   return (
     <>
-      {/* Floating Button */}
+      {/* Floating Button with Fire Animation */}
       <motion.button
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        whileHover={{ scale: 1.15, rotate: 15 }}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        whileHover={{ scale: 1.15 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(true)}
         className="fixed bottom-6 right-6 z-50 group"
       >
         <div className="relative">
-          {/* Glow effect */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)] rounded-full blur opacity-50 group-hover:opacity-75 transition-opacity" />
+          {/* Fire glow layers */}
+          <div className="absolute -inset-3 rounded-full animate-pulse" style={{
+            background: 'radial-gradient(circle, hsl(0 84% 55% / 0.6) 0%, hsl(25 95% 55% / 0.3) 40%, transparent 70%)'
+          }} />
+          <div className="absolute -inset-2 rounded-full animate-pulse" style={{
+            background: 'radial-gradient(circle, hsl(0 84% 55% / 0.8) 0%, hsl(25 95% 55% / 0.4) 50%, transparent 70%)',
+            animationDelay: '0.2s'
+          }} />
           
           {/* Button */}
-          <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)] flex items-center justify-center shadow-lg">
-            <MessageSquare className="w-6 h-6 text-white" />
+          <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-[hsl(0,84%,55%)] via-[hsl(15,90%,50%)] to-[hsl(25,95%,55%)] flex items-center justify-center shadow-lg border-2 border-white/20">
+            <MessageSquare className="w-6 h-6 text-white drop-shadow-md" />
           </div>
           
-          {/* Pulse indicator */}
-          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background animate-pulse" />
+          {/* Flame particles */}
+          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-3 h-3">
+            <div className="w-full h-full rounded-full animate-bounce" style={{
+              background: 'linear-gradient(to top, hsl(25 95% 55%), hsl(45 95% 55%))',
+              filter: 'blur(1px)'
+            }} />
+          </div>
         </div>
       </motion.button>
 

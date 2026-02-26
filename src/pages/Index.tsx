@@ -1,19 +1,48 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, BookOpen, Zap, Users, TrendingUp } from "lucide-react";
+import { ArrowRight, BookOpen, Zap, Users, Flame } from "lucide-react";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0a0a0f]">
-        {/* Simple gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0f] via-[#12121a] to-[#0a0a0f]" />
+        {/* Fire gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0f] via-[#120a0a] to-[#0a0a0f]" />
         
-        {/* Subtle glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[hsl(262,83%,58%)] blur-[300px] opacity-15" />
+        {/* Fire glow - multiple layers */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[hsl(0,84%,55%)] blur-[250px] opacity-20" />
+        <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] rounded-full bg-[hsl(25,95%,55%)] blur-[150px] opacity-15" />
+        <div className="absolute bottom-1/3 right-1/4 w-[300px] h-[300px] rounded-full bg-[hsl(0,84%,55%)] blur-[120px] opacity-10" />
 
+        {/* Animated fire particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 rounded-full"
+              style={{
+                background: i % 2 === 0 ? 'hsl(0,84%,55%)' : 'hsl(25,95%,55%)',
+                left: `${15 + i * 15}%`,
+                bottom: '10%',
+                filter: 'blur(2px)',
+              }}
+              animate={{
+                y: [0, -100 - i * 20],
+                opacity: [0.8, 0],
+                scale: [1, 0.5],
+              }}
+              transition={{
+                duration: 2 + i * 0.5,
+                repeat: Infinity,
+                delay: i * 0.3,
+                ease: "easeOut",
+              }}
+            />
+          ))}
+        </div>
+        
         {/* Content */}
         <div className="relative z-10 container px-6">
           <div className="max-w-4xl mx-auto text-center">
@@ -24,7 +53,7 @@ const Index = () => {
               transition={{ delay: 0.2 }}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8"
             >
-              <span className="w-2 h-2 rounded-full bg-[hsl(262,83%,58%)] animate-pulse" />
+              <Flame className="w-4 h-4 text-[hsl(0,84%,55%)] animate-pulse" />
               <span className="text-sm text-gray-400">
                 AI-Powered Learning Platform
               </span>
@@ -38,7 +67,7 @@ const Index = () => {
               className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
             >
               Learn AI Engineering{" "}
-              <span className="text-[hsl(262,83%,58%)]">the Right Way</span>
+              <span className="text-gradient bg-gradient-to-r from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)] bg-clip-text text-transparent">the Right Way</span>
             </motion.h1>
 
             {/* Subtitle */}
@@ -60,7 +89,7 @@ const Index = () => {
               className="flex items-center justify-center gap-4 flex-wrap mb-16"
             >
               <Link to="/dashboard">
-                <Button size="lg" className="bg-[hsl(262,83%,58%)] hover:bg-[hsl(262,83%,48%)] text-white border-0 text-lg px-6">
+                <Button size="lg" className="bg-gradient-to-r from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)] hover:opacity-90 text-white border-0 text-lg px-6 shadow-lg shadow-[hsl(0,84%,55%)]/25">
                   Start Learning Free
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
@@ -135,10 +164,10 @@ const Index = () => {
               initial={{ y: 20, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              className="p-8 rounded-2xl bg-white/5 border border-white/10"
+              className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-[hsl(0,84%,55%)]/30 transition-colors"
             >
-              <div className="w-12 h-12 rounded-xl bg-[hsl(262,83%,58%)]/20 flex items-center justify-center mb-4">
-                <Zap className="w-6 h-6 text-[hsl(262,83%,58%)]" />
+              <div className="w-12 h-12 rounded-xl bg-[hsl(0,84%,55%)]/20 flex items-center justify-center mb-4">
+                <Zap className="w-6 h-6 text-[hsl(0,84%,55%)]" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">AI-Powered Tutoring</h3>
               <p className="text-gray-400">
@@ -152,10 +181,10 @@ const Index = () => {
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="p-8 rounded-2xl bg-white/5 border border-white/10"
+              className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-[hsl(0,84%,55%)]/30 transition-colors"
             >
-              <div className="w-12 h-12 rounded-xl bg-[hsl(262,83%,58%)]/20 flex items-center justify-center mb-4">
-                <BookOpen className="w-6 h-6 text-[hsl(262,83%,58%)]" />
+              <div className="w-12 h-12 rounded-xl bg-[hsl(0,84%,55%)]/20 flex items-center justify-center mb-4">
+                <BookOpen className="w-6 h-6 text-[hsl(0,84%,55%)]" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Structured Roadmaps</h3>
               <p className="text-gray-400">
@@ -169,10 +198,10 @@ const Index = () => {
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="p-8 rounded-2xl bg-white/5 border border-white/10"
+              className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-[hsl(0,84%,55%)]/30 transition-colors"
             >
-              <div className="w-12 h-12 rounded-xl bg-[hsl(262,83%,58%)]/20 flex items-center justify-center mb-4">
-                <Users className="w-6 h-6 text-[hsl(262,83%,58%)]" />
+              <div className="w-12 h-12 rounded-xl bg-[hsl(0,84%,55%)]/20 flex items-center justify-center mb-4">
+                <Users className="w-6 h-6 text-[hsl(0,84%,55%)]" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Community Support</h3>
               <p className="text-gray-400">
@@ -184,7 +213,7 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-b from-[#0a0a0f] to-[#12121a]">
+      <section className="py-24 bg-gradient-to-b from-[#0a0a0f] to-[#120a0a]">
         <div className="container px-6">
           <motion.div 
             initial={{ y: 20, opacity: 0 }}
@@ -199,7 +228,7 @@ const Index = () => {
               Join hundreds of students already learning AI engineering with us.
             </p>
             <Link to="/dashboard">
-              <Button size="lg" className="bg-[hsl(262,83%,58%)] hover:bg-[hsl(262,83%,48%)] text-white border-0 text-lg px-8">
+              <Button size="lg" className="bg-gradient-to-r from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)] hover:opacity-90 text-white border-0 text-lg px-8 shadow-lg shadow-[hsl(0,84%,55%)]/25">
                 Get Started Now
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
