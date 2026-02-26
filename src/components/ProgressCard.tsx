@@ -9,20 +9,21 @@ interface ProgressCardProps {
   icon: React.ReactNode;
   trend?: string;
   className?: string;
+  gradient?: string;
 }
 
-const ProgressCard = ({ title, value, subtitle, icon, trend, className }: ProgressCardProps) => (
+const ProgressCard = ({ title, value, subtitle, icon, trend, className, gradient = "from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)]" }: ProgressCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 12 }}
     animate={{ opacity: 1, y: 0 }}
-    className={cn("p-5 rounded-xl bg-card border border-border hover:shadow-md transition-all duration-300 group", className)}
+    className={cn("p-5 rounded-xl bg-card border border-border hover:border-[hsl(0,84%,55%)]/30 hover:shadow-glow transition-all duration-300 group", className)}
   >
     <div className="flex items-start justify-between mb-3">
-      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:shadow-glow transition-all">
+      <div className={cn("w-10 h-10 rounded-lg bg-gradient-to-br flex items-center justify-center text-white shadow-md", gradient)}>
         {icon}
       </div>
       {trend && (
-        <div className="flex items-center gap-1 text-xs text-success font-medium">
+        <div className="flex items-center gap-1 text-xs text-[hsl(142,69%,45%)] font-medium">
           <TrendingUp className="w-3 h-3" />
           {trend}
         </div>
@@ -42,6 +43,7 @@ export const StatCards = () => (
       subtitle="Best: 21 days"
       icon={<Flame className="w-5 h-5" />}
       trend="+3"
+      gradient="from-orange-500 to-red-500"
     />
     <ProgressCard
       title="XP Earned"
@@ -49,12 +51,14 @@ export const StatCards = () => (
       subtitle="This week: +380"
       icon={<TrendingUp className="w-5 h-5" />}
       trend="+12%"
+      gradient="from-yellow-500 to-amber-500"
     />
     <ProgressCard
       title="Lessons Done"
       value="34"
       subtitle="6 remaining in module"
       icon={<BookOpen className="w-5 h-5" />}
+      gradient="from-blue-500 to-cyan-500"
     />
     <ProgressCard
       title="Study Hours"
@@ -62,6 +66,7 @@ export const StatCards = () => (
       subtitle="Avg 2.3h per session"
       icon={<Clock className="w-5 h-5" />}
       trend="+8%"
+      gradient="from-purple-500 to-pink-500"
     />
   </div>
 );

@@ -1,206 +1,228 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { 
-  Sparkles, ArrowRight, Brain, Users, ClipboardCheck, 
-  MessageSquare, Rocket, BookOpen, Zap, Star, Target
-} from "lucide-react";
-
-const features = [
-  {
-    icon: Brain,
-    title: "AI-Powered Tutoring",
-    description: "Context-aware AI mentor that adapts to your learning progress and provides deep, personalized guidance.",
-  },
-  {
-    icon: Target,
-    title: "Structured Roadmaps",
-    description: "Follow domain-to-lesson learning paths with clear progression, skill tracking, and career mapping.",
-  },
-  {
-    icon: ClipboardCheck,
-    title: "Rubric Evaluation",
-    description: "Get multi-dimensional AI grading with transparent scoring and actionable improvement feedback.",
-  },
-  {
-    icon: Users,
-    title: "Community Knowledge",
-    description: "Learn from peers through threaded discussions, knowledge sharing, and collaborative problem solving.",
-  },
-  {
-    icon: Rocket,
-    title: "Career Discovery",
-    description: "See which careers unlock as you progress, with market relevance and portfolio project suggestions.",
-  },
-  {
-    icon: Zap,
-    title: "Gamified Progress",
-    description: "Earn XP, collect badges, maintain streaks, and level up as you master new concepts.",
-  },
-];
+import { ArrowRight, BookOpen, Zap, Users, TrendingUp } from "lucide-react";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
-      {/* Hero */}
-      <section className="relative min-h-screen flex items-center justify-center gradient-hero overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-            className="absolute -top-1/2 -right-1/2 w-full h-full rounded-full border border-primary-foreground/5"
-          />
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
-            className="absolute -bottom-1/2 -left-1/2 w-full h-full rounded-full border border-primary-foreground/5"
-          />
-          {[...Array(5)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 rounded-full bg-primary-foreground/20"
-              style={{ left: `${20 + i * 15}%`, top: `${30 + i * 10}%` }}
-              animate={{ y: [-10, 10], opacity: [0.2, 0.6, 0.2] }}
-              transition={{ duration: 3 + i, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
-            />
-          ))}
-        </div>
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0a0a0f]">
+        {/* Simple gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0f] via-[#12121a] to-[#0a0a0f]" />
+        
+        {/* Subtle glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[hsl(262,83%,58%)] blur-[300px] opacity-15" />
 
-        <div className="relative container px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-foreground/10 border border-primary-foreground/10 mb-8">
-              <Sparkles className="w-4 h-4 text-primary-foreground/80" />
-              <span className="text-sm text-primary-foreground/80 font-medium">
-                The future of learning is here
+        {/* Content */}
+        <div className="relative z-10 container px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Badge */}
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8"
+            >
+              <span className="w-2 h-2 rounded-full bg-[hsl(262,83%,58%)] animate-pulse" />
+              <span className="text-sm text-gray-400">
+                AI-Powered Learning Platform
               </span>
-            </div>
+            </motion.div>
 
-            <h1 className="text-5xl md:text-7xl font-display font-bold text-primary-foreground mb-6 leading-tight">
-              Learn Smarter with{" "}
-              <span className="relative">
-                AI School
-                <motion.div
-                  className="absolute -bottom-2 left-0 right-0 h-1 rounded-full bg-accent"
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ delay: 0.8, duration: 0.6 }}
-                />
-              </span>
-            </h1>
+            {/* Title */}
+            <motion.h1 
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
+            >
+              Learn AI Engineering{" "}
+              <span className="text-[hsl(262,83%,58%)]">the Right Way</span>
+            </motion.h1>
 
-            <p className="text-lg md:text-xl text-primary-foreground/70 max-w-2xl mx-auto mb-10 leading-relaxed">
-              An AI-native learning operating system. Structured roadmaps, intelligent tutoring, 
-              community knowledge, and career discovery — all in one place.
-            </p>
+            {/* Subtitle */}
+            <motion.p 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="text-xl text-gray-400 max-w-2xl mx-auto mb-10"
+            >
+              Structured roadmaps, intelligent tutoring, and community-driven learning. 
+              Go from beginner to hired AI engineer in months, not years.
+            </motion.p>
 
-            <div className="flex items-center justify-center gap-4 flex-wrap">
+            {/* CTA Buttons */}
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="flex items-center justify-center gap-4 flex-wrap mb-16"
+            >
               <Link to="/dashboard">
-                <Button variant="hero" size="xl" className="bg-primary-foreground text-foreground hover:bg-primary-foreground/90 shadow-lg">
-                  <Rocket className="w-5 h-5" />
-                  Start Learning
-                  <ArrowRight className="w-5 h-5" />
+                <Button size="lg" className="bg-[hsl(262,83%,58%)] hover:bg-[hsl(262,83%,48%)] text-white border-0 text-lg px-6">
+                  Start Learning Free
+                  <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
               <Link to="/learn">
-                <Button variant="glass" size="xl" className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10">
-                  <BookOpen className="w-5 h-5" />
-                  Explore Roadmap
+                <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 text-lg px-6">
+                  <BookOpen className="w-5 h-5 mr-2" />
+                  View Roadmap
                 </Button>
               </Link>
-            </div>
-          </motion.div>
+            </motion.div>
 
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="flex items-center justify-center gap-8 mt-16 flex-wrap"
-          >
-            {[
-              { value: "10K+", label: "Learners" },
-              { value: "500+", label: "Lessons" },
-              { value: "95%", label: "Completion Rate" },
-              { value: "4.9★", label: "Rating" },
-            ].map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="text-2xl font-display font-bold text-primary-foreground">{s.value}</div>
-                <div className="text-xs text-primary-foreground/50">{s.label}</div>
+            {/* Stats */}
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="grid grid-cols-3 gap-8 max-w-2xl mx-auto"
+            >
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-white mb-1">500+</div>
+                <div className="text-sm text-gray-500">Students</div>
               </div>
-            ))}
-          </motion.div>
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-white mb-1">50+</div>
+                <div className="text-sm text-gray-500">Projects</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-white mb-1">95%</div>
+                <div className="text-sm text-gray-500">Success Rate</div>
+              </div>
+            </motion.div>
+          </div>
         </div>
+
+        {/* Scroll indicator */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        >
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="w-6 h-10 rounded-full border border-white/20 flex items-start justify-center p-2"
+          >
+            <motion.div 
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="w-1 h-2 rounded-full bg-white/60" 
+            />
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* Features */}
-      <section className="py-24 gradient-surface">
+      {/* Features Section */}
+      <section className="py-24 bg-[#0a0a0f]">
         <div className="container px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-display font-bold text-foreground mb-4">
-              Everything you need to{" "}
-              <span className="text-gradient">master AI</span>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Why Choose AI School?
             </h2>
-            <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              A complete learning ecosystem designed to take you from beginner to professional.
+            <p className="text-gray-400 max-w-xl mx-auto">
+              We combine structured learning with AI-powered tools to accelerate your journey.
             </p>
-          </motion.div>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f, i) => (
-              <motion.div
-                key={f.title}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="p-6 rounded-xl bg-card border border-border hover:border-primary/20 hover:shadow-md transition-all group"
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:shadow-glow transition-all">
-                  <f.icon className="w-6 h-6" />
-                </div>
-                <h3 className="font-display font-semibold text-foreground mb-2">{f.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
-              </motion.div>
-            ))}
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              className="p-8 rounded-2xl bg-white/5 border border-white/10"
+            >
+              <div className="w-12 h-12 rounded-xl bg-[hsl(262,83%,58%)]/20 flex items-center justify-center mb-4">
+                <Zap className="w-6 h-6 text-[hsl(262,83%,58%)]" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">AI-Powered Tutoring</h3>
+              <p className="text-gray-400">
+                Get instant help from our AI assistant. Learn concepts faster with personalized explanations.
+              </p>
+            </motion.div>
+
+            {/* Feature 2 */}
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="p-8 rounded-2xl bg-white/5 border border-white/10"
+            >
+              <div className="w-12 h-12 rounded-xl bg-[hsl(262,83%,58%)]/20 flex items-center justify-center mb-4">
+                <BookOpen className="w-6 h-6 text-[hsl(262,83%,58%)]" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">Structured Roadmaps</h3>
+              <p className="text-gray-400">
+                Follow proven learning paths designed by industry experts. Know exactly what to learn next.
+              </p>
+            </motion.div>
+
+            {/* Feature 3 */}
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="p-8 rounded-2xl bg-white/5 border border-white/10"
+            >
+              <div className="w-12 h-12 rounded-xl bg-[hsl(262,83%,58%)]/20 flex items-center justify-center mb-4">
+                <Users className="w-6 h-6 text-[hsl(262,83%,58%)]" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">Community Support</h3>
+              <p className="text-gray-400">
+                Join a community of learners. Get feedback, collaborate on projects, and grow together.
+              </p>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20">
+      {/* CTA Section */}
+      <section className="py-24 bg-gradient-to-b from-[#0a0a0f] to-[#12121a]">
         <div className="container px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true }}
-            className="rounded-2xl gradient-hero p-12 text-center"
+            className="text-center max-w-2xl mx-auto"
           >
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-primary-foreground mb-4">
-              Ready to start your journey?
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Ready to Start Your Journey?
             </h2>
-            <p className="text-primary-foreground/70 max-w-lg mx-auto mb-8">
-              Join thousands of learners building real-world AI skills with personalized guidance.
+            <p className="text-gray-400 mb-8">
+              Join hundreds of students already learning AI engineering with us.
             </p>
             <Link to="/dashboard">
-              <Button variant="hero" size="xl" className="bg-primary-foreground text-foreground hover:bg-primary-foreground/90">
-                <Star className="w-5 h-5" />
-                Get Started Free
-                <ArrowRight className="w-5 h-5" />
+              <Button size="lg" className="bg-[hsl(262,83%,58%)] hover:bg-[hsl(262,83%,48%)] text-white border-0 text-lg px-8">
+                Get Started Now
+                <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
           </motion.div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="py-12 border-t border-white/10">
+        <div className="container px-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-gray-500">
+              © 2024 AI School. Built for learners.
+            </div>
+            <div className="flex items-center gap-6 text-gray-500">
+              <span className="hover:text-white cursor-pointer transition-colors">About</span>
+              <span className="hover:text-white cursor-pointer transition-colors">Privacy</span>
+              <span className="hover:text-white cursor-pointer transition-colors">Terms</span>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

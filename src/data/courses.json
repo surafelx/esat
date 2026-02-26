@@ -1,0 +1,201 @@
+{
+  "courses": [
+    {
+      "id": "ai-engineer",
+      "title": "AI Engineering",
+      "description": "Master the art of building AI-powered applications",
+      "icon": "Brain",
+      "color": "from-blue-500 to-cyan-500",
+      "modules": [
+        {
+          "id": "introduction",
+          "title": "Introduction to AI Engineering",
+          "description": "Foundation concepts for AI Engineers",
+          "lessons": [
+            {
+              "id": "what-is-ai-engineer",
+              "title": "What is an AI Engineer?",
+              "type": "video",
+              "duration": "12 min",
+              "description": "Understanding the role of an AI Engineer in modern tech teams",
+              "content": {
+                "videoUrl": "https://example.com/videos/what-is-ai-engineer",
+                "transcript": "AI Engineers are responsible for building, deploying, and maintaining AI systems..."
+              }
+            },
+            {
+              "id": "roles-responsibilities",
+              "title": "Roles & Responsibilities",
+              "type": "concept",
+              "duration": "15 min",
+              "description": "Deep dive into what AI Engineers do day-to-day",
+              "content": {
+                "sections": [
+                  {
+                    "title": "Core Responsibilities",
+                    "body": "AI Engineers design and implement machine learning models, deploy AI systems at scale, and collaborate with data scientists and software engineers."
+                  },
+                  {
+                    "title": "Team Collaboration",
+                    "body": "Work closely with product managers, data scientists, and DevOps teams to deliver AI-powered features."
+                  },
+                  {
+                    "title": "Technical Skills Required",
+                    "body": "Proficiency in Python, TensorFlow/PyTorch, cloud platforms, and MLOps practices."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "impact-product-development",
+              "title": "Impact on Product Development",
+              "type": "blog",
+              "duration": "10 min",
+              "description": "How AI is transforming product development",
+              "content": {
+                "summary": "AI is revolutionizing how products are built, tested, and delivered to users.",
+                "body": "AI integration in product development leads to smarter features, automated workflows, and personalized user experiences. Companies are leveraging AI to reduce costs, improve efficiency, and create competitive advantages.",
+                "keyPoints": [
+                  "Automated decision-making in products",
+                  "Personalized user experiences",
+                  "Predictive analytics for business insights",
+                  "Enhanced automation and efficiency"
+                ]
+              }
+            },
+            {
+              "id": "ai-vs-ml-engineering",
+              "title": "AI vs ML Engineering",
+              "type": "discourse",
+              "duration": "20 min",
+              "description": "Understanding the difference between AI and ML Engineering",
+              "content": {
+                "topic": "AI Engineering vs Machine Learning Engineering: What's the difference?",
+                "aiEngineering": {
+                  "definition": "Building applications that use AI capabilities",
+                  "focus": "Production-ready AI systems, deployment, scaling"
+                },
+                "mlEngineering": {
+                  "definition": "Creating and optimizing machine learning models",
+                  "focus": "Model training, evaluation, experimentation"
+                },
+                "discussion": "Both roles are crucial for building AI products. While ML Engineers focus on model development, AI Engineers ensure these models work effectively in production."
+              }
+            },
+            {
+              "id": "ai-terminology",
+              "title": "Common AI Terminology",
+              "type": "interactive",
+              "duration": "25 min",
+              "description": "Essential terms every AI Engineer should know",
+              "content": {
+                "terms": [
+                  {
+                    "term": "Machine Learning (ML)",
+                    "definition": "A subset of AI where systems learn from data without explicit programming",
+                    "example": "Spam detection that learns from user reports"
+                  },
+                  {
+                    "term": "Neural Network",
+                    "definition": "Computing systems inspired by biological neural networks",
+                    "example": "Deep learning models for image recognition"
+                  },
+                  {
+                    "term": "Deep Learning",
+                    "definition": "ML using multi-layer neural networks",
+                    "example": "GPT models, transformers"
+                  },
+                  {
+                    "term": "Model Training",
+                    "definition": "The process of teaching a model from data",
+                    "example": "Feeding labeled images to recognize cats"
+                  },
+                  {
+                    "term": "Inference",
+                    "definition": "Using a trained model to make predictions",
+                    "example": "Running a model on new images to detect objects"
+                  },
+                  {
+                    "term": "Hyperparameters",
+                    "definition": "Settings that control the learning process",
+                    "example": "Learning rate, batch size, number of layers"
+                  },
+                  {
+                    "term": "Overfitting",
+                    "definition": "When a model learns training data too well",
+                    "example": "High accuracy on training but poor on test data"
+                  },
+                  {
+                    "term": "Transfer Learning",
+                    "definition": "Using knowledge from one task for another",
+                    "example": "Using ImageNet pre-trained models for new tasks"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "python-fundamentals",
+          "title": "Python Fundamentals for AI",
+          "description": "Essential Python skills for AI Engineering",
+          "lessons": []
+        },
+        {
+          "id": "ml-basics",
+          "title": "Machine Learning Basics",
+          "description": "Core concepts of machine learning",
+          "lessons": []
+        },
+        {
+          "id": "deep-learning",
+          "title": "Deep Learning",
+          "description": "Neural networks and advanced ML",
+          "lessons": []
+        },
+        {
+          "id": "nlp",
+          "title": "Natural Language Processing",
+          "description": "Working with text and language models",
+          "lessons": []
+        },
+        {
+          "id": "computer-vision",
+          "title": "Computer Vision",
+          "description": "Image and video analysis",
+          "lessons": []
+        },
+        {
+          "id": "mlops",
+          "title": "MLOps & Deployment",
+          "description": "Production ML systems",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "data-science",
+      "title": "Data Science",
+      "description": "Analyze data and extract insights",
+      "icon": "BarChart",
+      "color": "from-green-500 to-emerald-500",
+      "modules": []
+    },
+    {
+      "id": "mlops",
+      "title": "MLOps",
+      "description": "Machine learning operations and deployment",
+      "icon": "Settings",
+      "color": "from-purple-500 to-pink-500",
+      "modules": []
+    },
+    {
+      "id": "product-management",
+      "title": "AI Product Management",
+      "description": "Building AI-powered products",
+      "icon": "Package",
+      "color": "from-orange-500 to-red-500",
+      "modules": []
+    }
+  ]
+}

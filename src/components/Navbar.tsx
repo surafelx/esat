@@ -25,7 +25,7 @@ const Navbar = () => {
             <Sparkles className="w-4 h-4 text-primary-foreground" />
           </div>
           <span className="font-display font-bold text-lg text-foreground">
-            AI School
+            Lectito
           </span>
         </Link>
 
