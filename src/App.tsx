@@ -4,16 +4,8 @@ import { Toaster as SileoToaster } from "sileo";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Dashboard from "./pages/Dashboard";
-import Learn from "./pages/Learn";
-import Quiz from "./pages/Quiz";
-import Chat from "./pages/Chat";
-import Assignments from "./pages/Assignments";
-import Onboarding from "./pages/Onboarding";
-import AuthTest from "./pages/AuthTest";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-import TalkToMe from "./components/TalkToMe";
 
 const queryClient = new QueryClient();
 
@@ -24,16 +16,8 @@ const App = () => (
       <Sonner />
       <SileoToaster position="top-right" theme="dark" />
       <BrowserRouter>
-        <TalkToMe />
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/learn" element={<Learn />} />
-          <Route path="/quiz" element={<Quiz />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/assignments" element={<Assignments />} />
-          <Route path="/auth-test" element={<AuthTest />} />
+          <Route path="/" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
