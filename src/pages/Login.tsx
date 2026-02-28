@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdToken } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,20 +11,26 @@ import { Label } from "@/components/ui/label";
 const API_URL = "http://localhost:3000";
 
 const Login = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [user, setUser] = useState<any>(null);
+
+  // Redirect if already logged in
+  if (user) {
+    navigate("/dashboard");
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    // Validation
     if (!isLogin && password !== confirmPassword) {
       setError("Passwords do not match");
       setLoading(false);
@@ -39,33 +47,29 @@ const Login = () => {
       let userCredential;
       
       if (isLogin) {
-        // Sign in
         userCredential = await signInWithEmailAndPassword(auth, email, password);
       } else {
-        // Sign up
         userCredential = await createUserWithEmailAndPassword(auth, email, password);
       }
       
       const idToken = await getIdToken(userCredential.user);
       
-      // Send token to our backend
       const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          idToken,
-          role: "student"
+          idToken
         }),
       });
       
-      const data = await res.json();
-      
       if (!res.ok) {
+        const data = await res.json();
         setError(data.error || "Authentication failed");
         return;
       }
       
-      setUser(data);
+      // Login successful - will redirect due to auth state change
+      navigate("/dashboard");
     } catch (err: any) {
       if (err.code === "auth/invalid-email") {
         setError("Invalid email address");
@@ -88,31 +92,6 @@ const Login = () => {
       setLoading(false);
     }
   };
-
-  if (user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Welcome!</CardTitle>
-            <CardDescription>You are now logged in</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <pre className="bg-gray-100 p-4 rounded text-xs overflow-auto max-h-60">
-              {JSON.stringify(user, null, 2)}
-            </pre>
-            <Button 
-              onClick={() => setUser(null)} 
-              className="mt-4 w-full"
-              variant="outline"
-            >
-              Logout
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">

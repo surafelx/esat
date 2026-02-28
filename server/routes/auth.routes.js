@@ -118,7 +118,7 @@ router.post('/xp', verifyToken, async (req, res) => {
  * GET /auth/users
  * Get all users (admin only)
  */
-router.get('/users', verifyToken, requireRole('admin'), async (req, res) => {
+router.get('/users', verifyToken, requireRole('admin', 'instructor'), async (req, res) => {
   try {
     const { role } = req.query;
     const users = await getAllUsers(role || null);

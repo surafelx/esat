@@ -83,7 +83,7 @@ async function getAllUsers(role = null) {
   }
   
   const snapshot = await query.get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return snapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
 }
 
 module.exports = {
