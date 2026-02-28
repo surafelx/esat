@@ -342,52 +342,6 @@ ai-academy/
 
 ---
 
-## 🧩 Planned Features (Placeholders)
-
-### Feature 1: Real-Time Collaboration Environment
-
-A live coding environment where students can collaborate in real-time:
-
-- **Description**: Browser-based code editor with live collaboration, similar to Google Docs but for code
-- **Tech Stack**: Monaco Editor, Yjs for CRDT, WebSocket
-- **Status**: Planned
-- **Use Cases**:
-  - Pair programming sessions
-  - Real-time code review
-  - Collaborative problem-solving
-
----
-
-### Feature 2: AI-Powered Code Review System
-
-Automated code analysis and feedback system:
-
-- **Description**: AI agent that reviews student code submissions and provides detailed feedback
-- **Tech Stack**: OpenAI API, GitHub Actions
-- **Status**: Planned
-- **Use Cases**:
-  - Instant feedback on assignments
-  - Best practices suggestions
-  - Security vulnerability detection
-  - Performance optimization tips
-
----
-
-### Feature 3: Industry Certification Engine
-
-Blockchain-verified certificates for completed tracks:
-
-- **Description**: Generate verifiable certificates upon course completion
-- **Tech Stack**: Polygon/Ethereum, IPFS, PDF generation
-- **Status**: Planned
-- **Use Cases**:
-  - Professional credentials
-  - LinkedIn integration
-  - Employer verification
-  - Portfolio building
-
----
-
 ## 🚦 Getting Started
 
 ### Prerequisites
