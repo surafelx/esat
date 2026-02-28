@@ -66,21 +66,21 @@ const Learn = () => {
     }
   };
 
-  const addXP = async (amount: number) => {
+  const addXP = (amount: number) => {
     setTotalXP(prev => prev + amount);
     
-    // Show sileo toast notification
-    await sileo.promise(
-      new Promise((resolve) => setTimeout(resolve, 1500)),
-      {
-        loading: { title: `earning +${amount} XP...` },
-        success: { 
-          title: `+${amount} XP earned!`,
-          description: "Keep up the great work!"
-        },
-        error: { title: "Failed to earn XP" },
-      }
-    );
+    // Show sileo toast notification with theme styling
+    sileo.success({
+      title: `+${amount} XP earned!`,
+      description: "Keep up the great work!",
+      position: "top-right",
+      fill: "#0a0a0f",
+      styles: {
+        title: "text-white!",
+        description: "text-gray-400!",
+        badge: "bg-[hsl(0,84%,55%)]!",
+      },
+    });
   };
 
   const completeLesson = () => {
