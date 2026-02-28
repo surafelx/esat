@@ -1,9 +1,9 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { 
-  ArrowRight, Brain, Target, Zap, Rocket, User, Check
+  ArrowRight, Brain, Zap, Rocket, User, Check, Flame
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 
 const careerPaths = [
@@ -12,235 +12,629 @@ const careerPaths = [
     title: "ML Engineer", 
     icon: Brain, 
     color: "from-blue-500 to-purple-500",
-    description: "Build and deploy ML models"
+    description: "Build and deploy machine learning models at scale",
+    questions: [
+      { id: "ml-goal", question: "What do you want to build?", type: "text", placeholder: "e.g., Image classifier, recommendation system..." },
+    ]
   },
   { 
     id: "developer", 
     title: "AI Developer", 
-    icon: Rocket, 
+    icon: Brain, 
     color: "from-green-500 to-teal-500",
-    description: "Create AI-powered applications"
+    description: "Create AI-powered applications and products",
+    questions: [
+      { id: "dev-goal", question: "What kind of AI app do you want to create?", type: "text", placeholder: "e.g., Chatbot, automation tool, AI assistant..." },
+    ]
   },
   { 
     id: "researcher", 
     title: "AI Researcher", 
     icon: Zap, 
     color: "from-purple-500 to-pink-500",
-    description: "Push the boundaries of AI"
+    description: "Push the boundaries of artificial intelligence",
+    questions: [
+      { id: "research-interest", question: "What area fascinates you most?", type: "text", placeholder: "e.g., Large language models, computer vision, reinforcement learning..." },
+    ]
   },
 ];
 
-const Onboarding = () => {
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({ name: "" });
-  const [selectedCareer, setSelectedCareer] = useState("");
+// Typewriter effect component
+const TypewriterText = ({ text, className, delay = 0 }: { text: string; className?: string; delay?: number }) => {
+  const [displayedText, setDisplayedText] = useState("");
+  const [started, setStarted] = useState(false);
 
-  const handleNext = () => setStep(step + 1);
-  const handlePrev = () => setStep(step - 1);
+  useEffect(() => {
+    setDisplayedText("");
+    setStarted(false);
+    
+    const startTimeout = setTimeout(() => {
+      setStarted(true);
+      let currentIndex = 0;
+      const interval = setInterval(() => {
+        if (currentIndex <= text.length) {
+          setDisplayedText(text.slice(0, currentIndex));
+          currentIndex++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 40);
+
+      return () => clearInterval(interval);
+    }, delay * 1000);
+
+    return () => clearTimeout(startTimeout);
+  }, [text, delay]);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-6">
-      {/* Subtle background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[hsl(262,83%,58%)] blur-[300px] opacity-10" />
+    <span className={className}>
+      {displayedText}
+      {started && displayedText.length < text.length && (
+        <motion.span
+          animate={{ opacity: [1, 0] }}
+          transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+          className="inline-block w-0.5 h-[1em] bg-[hsl(0,84%,55%)] ml-0.5 align-middle"
+        />
+      )}
+    </span>
+  );
+};
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 w-full max-w-lg"
-      >
-        {/* Progress bar */}
-        <div className="flex gap-2 mb-8">
-          {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className={`h-1 flex-1 rounded-full transition-all ${
-                i <= step ? "bg-[hsl(262,83%,58%)]" : "bg-white/10"
-              }`}
+const Onboarding = () => {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [isInteracting, setIsInteracting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    role: "",
+    experience: "",
+    goal: "",
+    interests: [] as string[],
+    customAnswer: "",
+  });
+
+  // Calculate total questions dynamically based on career path
+  const getTotalQuestions = () => {
+    if (!formData.role) return 6;
+    const path = careerPaths.find(p => p.id === formData.role);
+    if (!path) return 6;
+    return 6 + path.questions.length;
+  };
+
+  const totalQuestions = getTotalQuestions();
+  const progress = ((currentQuestion + 1) / totalQuestions) * 100;
+
+  const handleInteractionStart = () => setIsInteracting(true);
+  const handleInteractionEnd = () => setIsInteracting(false);
+
+  // Keyboard navigation
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleNext();
+    }
+  }, [currentQuestion, formData]);
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
+  const handleNext = () => {
+    const path = careerPaths.find(p => p.id === formData.role);
+    const pathQuestions = path?.questions || [];
+    
+    if (currentQuestion === 0) {
+      setDirection(1);
+      setCurrentQuestion(1);
+    } else if (currentQuestion === 1) {
+      if (formData.name.trim()) {
+        setDirection(1);
+        setCurrentQuestion(2);
+      }
+    } else if (currentQuestion === 2) {
+      if (formData.email.trim() && formData.email.includes('@')) {
+        setDirection(1);
+        setCurrentQuestion(3);
+      }
+    } else if (currentQuestion === 3) {
+      if (formData.role) {
+        setDirection(1);
+        if (pathQuestions.length > 0) {
+          setCurrentQuestion(4);
+        } else {
+          setCurrentQuestion(5);
+        }
+      }
+    } else if (currentQuestion >= 4 && currentQuestion < 4 + pathQuestions.length) {
+      setDirection(1);
+      setCurrentQuestion(currentQuestion + 1);
+    } else if (currentQuestion === 4 + pathQuestions.length) {
+      setDirection(1);
+      setCurrentQuestion(5 + pathQuestions.length);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentQuestion > 0) {
+      setDirection(-1);
+      setCurrentQuestion(currentQuestion - 1);
+    }
+  };
+
+  const handleRoleSelect = (roleId: string) => {
+    setFormData({ ...formData, role: roleId, customAnswer: "" });
+  };
+
+  const getPersonalizedGreeting = () => {
+    if (!formData.name.trim()) return null;
+    return formData.name.trim().split(" ")[0];
+  };
+
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 300 : -300,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: number) => ({
+      x: direction < 0 ? 300 : -300,
+      opacity: 0,
+    }),
+  };
+
+  const getCurrentQuestionContent = () => {
+    const path = careerPaths.find(p => p.id === formData.role);
+    const pathQuestions = path?.questions || [];
+
+    // Question 0: Welcome
+    if (currentQuestion === 0) {
+      return (
+        <div className="text-left max-w-4xl">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)] flex items-center justify-center mb-8 shadow-lg shadow-[hsl(0,84%,55%)]/30"
+          >
+            <Flame className="w-10 h-10 text-white" />
+          </motion.div>
+          
+          <h1 className="text-6xl md:text-7xl font-bold text-white mb-6">
+            <TypewriterText text="🚀 Welcome to AI School" delay={0.3} />
+          </h1>
+          
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 1.5 }}
+            className="text-xl text-gray-400 mb-8 max-w-lg"
+          >
+            Your personalized path to becoming an AI engineer starts here
+          </motion.p>
+
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 2 }}
+            className="flex items-center gap-2 text-gray-500"
+          >
+            <span className="text-sm">Press</span>
+            <kbd className="px-3 py-1 bg-white/10 rounded-lg text-white text-sm font-mono">Enter</kbd>
+            <span className="text-sm">to continue</span>
+          </motion.div>
+        </div>
+      );
+    }
+
+    // Question 1: Name
+    if (currentQuestion === 1) {
+      const hasName = formData.name.length > 0;
+      
+      return (
+        <div className="max-w-4xl w-full">
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 text-left">
+            <TypewriterText text="👋 What should we call you?" delay={0} />
+          </h1>
+          
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="text-xl text-gray-400 mb-10 text-left"
+          >
+            This helps us personalize your experience
+          </motion.p>
+
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 1 }}
+            onMouseDown={handleInteractionStart}
+            onMouseUp={handleInteractionEnd}
+            onTouchStart={handleInteractionStart}
+            onTouchEnd={handleInteractionEnd}
+          >
+            <div className="relative">
+              <User className={`absolute left-0 top-1/2 -translate-y-1/2 w-6 h-6 ${hasName ? 'text-white' : 'text-gray-500'}`} />
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="Your name"
+                autoFocus
+                style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
+                className={`w-full bg-transparent border-b-2 rounded-none pl-10 pr-4 py-4 text-2xl text-white placeholder:text-gray-500 outline-none transition-all ${hasName ? 'border-[hsl(0,84%,55%)]' : 'border-white/20'}`}
+              />
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="flex items-center gap-2 text-gray-500 mt-4"
+          >
+            <span className="text-sm">Press</span>
+            <kbd className="px-2 py-0.5 bg-white/10 rounded text-white text-sm font-mono">Enter</kbd>
+            <span className="text-sm">to continue</span>
+          </motion.div>
+        </div>
+      );
+    }
+
+    // Question 2: Email
+    if (currentQuestion === 2) {
+      const hasEmail = formData.email.length > 0;
+      const hasAt = formData.email.includes('@');
+      
+      return (
+        <div className="max-w-4xl w-full">
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 text-left">
+            <TypewriterText text="📧 What's your email?" delay={0} />
+          </h1>
+          
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="text-xl text-gray-400 mb-10 text-left"
+          >
+            We'll send your personalized roadmap here
+          </motion.p>
+
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 1 }}
+            onMouseDown={handleInteractionStart}
+            onMouseUp={handleInteractionEnd}
+            onTouchStart={handleInteractionStart}
+            onTouchEnd={handleInteractionEnd}
+          >
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              placeholder="your@email.com"
+              autoFocus
+              style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
+              className={`w-full bg-transparent border-b-2 rounded-none px-4 py-4 text-2xl text-white placeholder:text-gray-500 outline-none transition-all ${hasEmail && hasAt ? 'border-white/50' : hasEmail ? 'border-[hsl(0,84%,55%)]' : 'border-white/20'}`}
             />
-          ))}
+          </motion.div>
+
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="flex items-center gap-2 text-gray-500 mt-4"
+          >
+            <span className="text-sm">Press</span>
+            <kbd className="px-2 py-0.5 bg-white/10 rounded text-white text-sm font-mono">Enter</kbd>
+            <span className="text-sm">to continue</span>
+          </motion.div>
         </div>
+      );
+    }
 
-        {/* Card */}
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
-          {/* Step 1: Welcome */}
-          {step === 1 && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="text-center"
-            >
-              <div className="w-16 h-16 rounded-2xl bg-[hsl(262,83%,58%)]/20 flex items-center justify-center mx-auto mb-6">
-                <Brain className="w-8 h-8 text-[hsl(262,83%,58%)]" />
-              </div>
-              
-              <h1 className="text-2xl font-bold text-white mb-2">
-                Welcome to AI School
-              </h1>
-              <p className="text-gray-400 mb-8">
-                Your journey to becoming an AI engineer starts here
-              </p>
+    // Question 3: Role selection
+    if (currentQuestion === 3) {
+      const greeting = getPersonalizedGreeting();
+      const roleText = greeting 
+        ? `🎯 Great, ${greeting} — what brings you here?`
+        : "🎯 What brings you to AI School?";
+      
+      return (
+        <div className="max-w-4xl w-full">
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-3">
+            <TypewriterText text={roleText} delay={0} />
+          </h1>
+          
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="text-xl text-gray-400 mb-10"
+          >
+            Choose the path that matches your goals
+          </motion.p>
 
-              <div className="grid grid-cols-3 gap-3 mb-8">
-                {[
-                  { icon: Brain, label: "AI Tutoring" },
-                  { icon: Target, label: "Roadmaps" },
-                  { icon: Rocket, label: "Projects" },
-                ].map((feature) => (
-                  <div
-                    key={feature.label}
-                    className="p-3 rounded-xl bg-white/5 border border-white/10"
-                  >
-                    <feature.icon className="w-5 h-5 text-[hsl(262,83%,58%)] mx-auto mb-1" />
-                    <p className="text-xs text-gray-400">{feature.label}</p>
-                  </div>
-                ))}
-              </div>
-
-              <Button 
-                onClick={handleNext} 
-                className="w-full bg-[hsl(262,83%,58%)] hover:bg-[hsl(262,83%,48%)] text-white"
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="space-y-3"
+          >
+            {careerPaths.map((path, index) => (
+              <motion.button
+                key={path.id}
+                onClick={() => handleRoleSelect(path.id)}
+                onMouseDown={handleInteractionStart}
+                onMouseUp={handleInteractionEnd}
+                onTouchStart={handleInteractionStart}
+                onTouchEnd={handleInteractionEnd}
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 1.3 + index * 0.1 }}
+                className={`w-full p-5 rounded-2xl border-2 text-left transition-all flex items-center gap-4 group ${
+                  formData.role === path.id
+                    ? "border-white bg-white/5"
+                    : "border-white/20 hover:border-white/40 hover:bg-white/5"
+                }`}
               >
-                Get Started
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </motion.div>
-          )}
-
-          {/* Step 2: Basic Info */}
-          {step === 2 && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-            >
-              <h1 className="text-xl font-bold text-white mb-2">
-                What's your name?
-              </h1>
-              <p className="text-gray-400 mb-6">
-                Let's personalize your experience
-              </p>
-
-              <div className="space-y-4 mb-6">
-                <div>
-                  <label className="text-sm text-gray-400 mb-2 block">Your name</label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    <input
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Enter your name"
-                      className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-3 text-white placeholder:text-gray-500 outline-none focus:border-[hsl(262,83%,58%)]/50"
-                    />
-                  </div>
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                  <path.icon className="w-6 h-6 text-white" />
                 </div>
-              </div>
-
-              <div className="flex gap-3">
-                <Button variant="ghost" onClick={handlePrev} className="flex-1 text-gray-400">
-                  Back
-                </Button>
-                <Button 
-                  onClick={handleNext} 
-                  disabled={!formData.name}
-                  className="flex-1 bg-[hsl(262,83%,58%)] hover:bg-[hsl(262,83%,48%)] text-white"
-                >
-                  Continue
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Step 3: Career Path */}
-          {step === 3 && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-            >
-              <h1 className="text-xl font-bold text-white mb-2">
-                Choose your path
-              </h1>
-              <p className="text-gray-400 mb-6">
-                What do you want to become?
-              </p>
-
-              <div className="space-y-3 mb-6">
-                {careerPaths.map((path) => (
-                  <button
-                    key={path.id}
-                    onClick={() => setSelectedCareer(path.id)}
-                    className={`w-full p-4 rounded-xl border-2 text-left transition-all flex items-center gap-4 ${
-                      selectedCareer === path.id
-                        ? "border-[hsl(262,83%,58%)] bg-[hsl(262,83%,58%)]/10"
-                        : "border-white/10 hover:border-white/20"
-                    }`}
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-white">{path.title}</h3>
+                  <p className="text-sm text-gray-400">{path.description}</p>
+                </div>
+                {formData.role === path.id && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="w-6 h-6 rounded-full bg-white flex items-center justify-center"
                   >
-                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${path.color} flex items-center justify-center`}>
-                      <path.icon className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-white">{path.title}</h3>
-                      <p className="text-xs text-gray-400">{path.description}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
+                    <Check className="w-4 h-4 text-black" />
+                  </motion.div>
+                )}
+              </motion.button>
+            ))}
+          </motion.div>
+        </div>
+      );
+    }
 
-              <div className="flex gap-3">
-                <Button variant="ghost" onClick={handlePrev} className="flex-1 text-gray-400">
-                  Back
-                </Button>
-                <Button 
-                  onClick={handleNext} 
-                  disabled={!selectedCareer}
-                  className="flex-1 bg-[hsl(262,83%,58%)] hover:bg-[hsl(262,83%,48%)] text-white"
-                >
-                  Continue
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            </motion.div>
-          )}
+    // Role-specific questions
+    const pathQuestionIndex = currentQuestion - 4;
+    if (pathQuestionIndex >= 0 && pathQuestionIndex < pathQuestions.length) {
+      const q = pathQuestions[pathQuestionIndex];
+      const questionEmojis = ["📊", "🔧", "🎓", "💡"];
+      const hasAnswer = formData.customAnswer.length > 0;
+      
+      return (
+        <div className="max-w-4xl w-full">
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+            <TypewriterText text={`${questionEmojis[pathQuestionIndex] || "❓"} ${q.question}`} delay={0} />
+          </h1>
 
-          {/* Step 4: Learning Style */}
-          {step === 4 && (
+          <>
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="text-center"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              onMouseDown={handleInteractionStart}
+              onMouseUp={handleInteractionEnd}
+              onTouchStart={handleInteractionStart}
+              onTouchEnd={handleInteractionEnd}
             >
-              <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
-                <Check className="w-8 h-8 text-green-500" />
-              </div>
-              
-              <h1 className="text-xl font-bold text-white mb-2">
-                You're all set!
-              </h1>
-              <p className="text-gray-400 mb-6">
-                Ready to start learning AI engineering?
-              </p>
-
-              <div className="p-4 rounded-xl bg-white/5 border border-white/10 mb-6 text-left">
-                <p className="text-white font-medium mb-1">{formData.name || "Learner"}</p>
-                <p className="text-xs text-gray-400">
-                  {careerPaths.find(c => c.id === selectedCareer)?.title}
-                </p>
-              </div>
-
-              <Link to="/dashboard">
-                <Button className="w-full bg-[hsl(262,83%,58%)] hover:bg-[hsl(262,83%,48%)] text-white">
-                  <Rocket className="w-4 h-4 mr-2" />
-                  Start Learning
-                </Button>
-              </Link>
+              <textarea
+                value={formData.customAnswer}
+                onChange={(e) => setFormData({ ...formData, customAnswer: e.target.value })}
+                placeholder={q.placeholder}
+                autoFocus
+                rows={3}
+                style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
+                className={`w-full bg-transparent border-b-2 rounded-none px-4 py-4 text-xl text-white placeholder:text-gray-500 outline-none transition-all resize-none ${hasAnswer ? 'border-white/50' : 'border-white/20'}`}
+              />
             </motion.div>
+
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 1 }}
+              className="flex items-center gap-2 text-gray-500 mt-4"
+            >
+              <span className="text-sm">Press</span>
+              <kbd className="px-2 py-0.5 bg-white/10 rounded text-white text-sm font-mono">Enter</kbd>
+              <span className="text-sm">to continue</span>
+            </motion.div>
+          </>
+        </div>
+      );
+    }
+
+    // Completion
+    return (
+      <div className="text-left max-w-4xl">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="w-24 h-24 rounded-full bg-gradient-to-br from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)] flex items-center justify-center mx-auto mb-8 shadow-lg shadow-[hsl(0,84%,55%)]/30"
+        >
+          <Check className="w-12 h-12 text-white" />
+        </motion.div>
+        
+        <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+          <TypewriterText text={`🎉 You're all set, ${getPersonalizedGreeting()}!`} delay={0} />
+        </h1>
+        
+        <motion.p 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="text-xl text-gray-400 mb-8"
+        >
+          Your personalized {careerPaths.find(p => p.id === formData.role)?.title} journey awaits
+        </motion.p>
+
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="p-6 rounded-2xl bg-white/5 border border-white/10 mb-8 text-left"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+              {(() => {
+                const path = careerPaths.find(p => p.id === formData.role);
+                const Icon = path?.icon || Brain;
+                return <Icon className="w-7 h-7 text-white" />;
+              })()}
+            </div>
+            <div>
+              <p className="text-lg font-semibold text-white">{formData.name}</p>
+              <p className="text-gray-400">{careerPaths.find(p => p.id === formData.role)?.title}</p>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 1.4 }}
+        >
+          <p className="text-gray-500 text-sm mb-6">
+            You'll receive a personalized learning roadmap based on your goals
+          </p>
+          
+          <Link to="/dashboard">
+            <Button 
+              size="lg" 
+              className="w-full bg-gradient-to-r from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)] hover:opacity-90 text-white text-lg py-6"
+            >
+              <Rocket className="w-5 h-5 mr-2" />
+              Start My Journey
+            </Button>
+          </Link>
+        </motion.div>
+      </div>
+    );
+  };
+
+  const canProceed = () => {
+    const path = careerPaths.find(p => p.id === formData.role);
+    const pathQuestions = path?.questions || [];
+    
+    if (currentQuestion === 0) return true;
+    if (currentQuestion === 1) return formData.name.trim().length > 0;
+    if (currentQuestion === 2) return formData.email.trim().length > 0 && formData.email.includes('@');
+    if (currentQuestion === 3) return formData.role.length > 0;
+    if (currentQuestion >= 4 && currentQuestion < 4 + pathQuestions.length) return formData.customAnswer.length > 0;
+    return true;
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0f] flex flex-col relative">
+      {/* Ambient glowing background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <motion.div 
+          className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full bg-[hsl(0,84%,55%)] blur-[300px] opacity-10"
+          animate={{ 
+            scale: isInteracting ? 1.2 : 1,
+            opacity: isInteracting ? 0.15 : 0.1,
+          }}
+          transition={{ duration: 0.3 }}
+        />
+        <motion.div 
+          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-[hsl(25,95%,55%)] blur-[250px] opacity-8"
+          animate={{ 
+            scale: isInteracting ? 1.1 : 1,
+          }}
+          transition={{ duration: 0.3 }}
+        />
+      </div>
+
+      {/* Progress bar */}
+      <div className="fixed top-0 left-0 right-0 h-1 bg-white/5 z-50">
+        <motion.div 
+          className="h-full bg-gradient-to-r from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)]"
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.5 }}
+        />
+      </div>
+
+      {/* Question counter */}
+      <div className="fixed top-4 right-6 z-50">
+        <p className="text-gray-500 text-sm font-medium">
+          {currentQuestion + 1} / {totalQuestions}
+        </p>
+      </div>
+
+      {/* Main content */}
+      <div className="flex-1 flex items-center justify-center p-6 md:p-12 pl-8 md:pl-20">
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div
+            key={currentQuestion}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ 
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2 }
+            }}
+            className="relative z-10 w-full max-w-5xl"
+          >
+            {getCurrentQuestionContent()}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Navigation footer - positioned higher */}
+      <div className="fixed bottom-8 left-0 right-0 px-4 z-40">
+        <div className="max-w-3xl mx-auto flex items-center justify-between">
+          <Button
+            variant="ghost"
+            onClick={handlePrev}
+            disabled={currentQuestion === 0}
+            className={`text-gray-400 hover:text-white ${currentQuestion === 0 ? 'opacity-0' : ''}`}
+          >
+            <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
+            Back
+          </Button>
+
+          <div className="flex gap-1 md:hidden">
+            {Array.from({ length: totalQuestions }).map((_, i) => (
+              <motion.div 
+                key={i}
+                className={`h-2 rounded-full transition-all ${
+                  i <= currentQuestion 
+                    ? "bg-[hsl(0,84%,55%)] w-8" 
+                    : "bg-white/20 w-2"
+                }`}
+              />
+            ))}
+          </div>
+
+          {currentQuestion < totalQuestions - 1 && (
+            <Button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              className="bg-transparent border border-white/20 text-white hover:bg-white/10 px-4"
+            >
+              Continue
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
           )}
         </div>
-
-        <p className="text-center text-xs text-gray-500 mt-6">
-          Step {step} of 4
-        </p>
-      </motion.div>
+      </div>
     </div>
   );
 };

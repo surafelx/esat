@@ -3,199 +3,319 @@
     {
       "id": "ai-engineer",
       "title": "AI Engineering",
-      "description": "Master the art of building AI-powered applications",
+      "description": "Learn how to build, deploy, scale, and operate production-grade AI systems as a Forward Deployed AI Engineer.",
       "icon": "Brain",
       "color": "from-blue-500 to-cyan-500",
       "modules": [
+
         {
-          "id": "introduction",
-          "title": "Introduction to AI Engineering",
-          "description": "Foundation concepts for AI Engineers",
+          "id": "ml-basics",
+          "title": "Machine Learning Basics",
+          "description": "Supervised, unsupervised, and applied ML foundations.",
           "lessons": [
             {
-              "id": "what-is-ai-engineer",
-              "title": "What is an AI Engineer?",
-              "type": "video",
-              "duration": "12 min",
-              "description": "Understanding the role of an AI Engineer in modern tech teams",
-              "content": {
-                "videoUrl": "https://example.com/videos/what-is-ai-engineer",
-                "transcript": "AI Engineers are responsible for building, deploying, and maintaining AI systems..."
-              }
-            },
-            {
-              "id": "roles-responsibilities",
-              "title": "Roles & Responsibilities",
+              "id": "supervised-learning",
+              "title": "Supervised Learning Fundamentals",
               "type": "concept",
-              "duration": "15 min",
-              "description": "Deep dive into what AI Engineers do day-to-day",
+              "duration": "30 min",
+              "description": "Regression, classification, and evaluation metrics.",
               "content": {
-                "sections": [
-                  {
-                    "title": "Core Responsibilities",
-                    "body": "AI Engineers design and implement machine learning models, deploy AI systems at scale, and collaborate with data scientists and software engineers."
-                  },
-                  {
-                    "title": "Team Collaboration",
-                    "body": "Work closely with product managers, data scientists, and DevOps teams to deliver AI-powered features."
-                  },
-                  {
-                    "title": "Technical Skills Required",
-                    "body": "Proficiency in Python, TensorFlow/PyTorch, cloud platforms, and MLOps practices."
-                  }
+                "topics": [
+                  "Linear regression",
+                  "Logistic regression",
+                  "Decision trees",
+                  "Bias vs variance",
+                  "Evaluation metrics (Precision, Recall, F1)"
                 ]
               }
             },
             {
-              "id": "impact-product-development",
-              "title": "Impact on Product Development",
-              "type": "blog",
-              "duration": "10 min",
-              "description": "How AI is transforming product development",
-              "content": {
-                "summary": "AI is revolutionizing how products are built, tested, and delivered to users.",
-                "body": "AI integration in product development leads to smarter features, automated workflows, and personalized user experiences. Companies are leveraging AI to reduce costs, improve efficiency, and create competitive advantages.",
-                "keyPoints": [
-                  "Automated decision-making in products",
-                  "Personalized user experiences",
-                  "Predictive analytics for business insights",
-                  "Enhanced automation and efficiency"
-                ]
-              }
-            },
-            {
-              "id": "ai-vs-ml-engineering",
-              "title": "AI vs ML Engineering",
-              "type": "discourse",
-              "duration": "20 min",
-              "description": "Understanding the difference between AI and ML Engineering",
-              "content": {
-                "topic": "AI Engineering vs Machine Learning Engineering: What's the difference?",
-                "aiEngineering": {
-                  "definition": "Building applications that use AI capabilities",
-                  "focus": "Production-ready AI systems, deployment, scaling"
-                },
-                "mlEngineering": {
-                  "definition": "Creating and optimizing machine learning models",
-                  "focus": "Model training, evaluation, experimentation"
-                },
-                "discussion": "Both roles are crucial for building AI products. While ML Engineers focus on model development, AI Engineers ensure these models work effectively in production."
-              }
-            },
-            {
-              "id": "ai-terminology",
-              "title": "Common AI Terminology",
-              "type": "interactive",
+              "id": "unsupervised-learning",
+              "title": "Unsupervised Learning",
+              "type": "concept",
               "duration": "25 min",
-              "description": "Essential terms every AI Engineer should know",
+              "description": "Clustering and dimensionality reduction.",
               "content": {
-                "terms": [
-                  {
-                    "term": "Machine Learning (ML)",
-                    "definition": "A subset of AI where systems learn from data without explicit programming",
-                    "example": "Spam detection that learns from user reports"
-                  },
-                  {
-                    "term": "Neural Network",
-                    "definition": "Computing systems inspired by biological neural networks",
-                    "example": "Deep learning models for image recognition"
-                  },
-                  {
-                    "term": "Deep Learning",
-                    "definition": "ML using multi-layer neural networks",
-                    "example": "GPT models, transformers"
-                  },
-                  {
-                    "term": "Model Training",
-                    "definition": "The process of teaching a model from data",
-                    "example": "Feeding labeled images to recognize cats"
-                  },
-                  {
-                    "term": "Inference",
-                    "definition": "Using a trained model to make predictions",
-                    "example": "Running a model on new images to detect objects"
-                  },
-                  {
-                    "term": "Hyperparameters",
-                    "definition": "Settings that control the learning process",
-                    "example": "Learning rate, batch size, number of layers"
-                  },
-                  {
-                    "term": "Overfitting",
-                    "definition": "When a model learns training data too well",
-                    "example": "High accuracy on training but poor on test data"
-                  },
-                  {
-                    "term": "Transfer Learning",
-                    "definition": "Using knowledge from one task for another",
-                    "example": "Using ImageNet pre-trained models for new tasks"
-                  }
+                "topics": [
+                  "K-means clustering",
+                  "Hierarchical clustering",
+                  "PCA",
+                  "Anomaly detection"
+                ]
+              }
+            },
+            {
+              "id": "model-evaluation",
+              "title": "Model Evaluation & Overfitting",
+              "type": "interactive",
+              "duration": "20 min",
+              "description": "Avoiding common ML mistakes.",
+              "content": {
+                "topics": [
+                  "Cross validation",
+                  "Train/validation/test splits",
+                  "Overfitting vs underfitting",
+                  "Data leakage"
                 ]
               }
             }
           ]
         },
-        {
-          "id": "python-fundamentals",
-          "title": "Python Fundamentals for AI",
-          "description": "Essential Python skills for AI Engineering",
-          "lessons": []
-        },
-        {
-          "id": "ml-basics",
-          "title": "Machine Learning Basics",
-          "description": "Core concepts of machine learning",
-          "lessons": []
-        },
+
         {
           "id": "deep-learning",
           "title": "Deep Learning",
-          "description": "Neural networks and advanced ML",
-          "lessons": []
+          "description": "Neural networks, backpropagation, CNNs, and transformers.",
+          "lessons": [
+            {
+              "id": "neural-networks",
+              "title": "Neural Network Foundations",
+              "type": "video",
+              "duration": "35 min",
+              "description": "Understanding layers, activation functions, and training.",
+              "content": {
+                "topics": [
+                  "Perceptron",
+                  "Activation functions (ReLU, Sigmoid)",
+                  "Backpropagation",
+                  "Gradient descent"
+                ]
+              }
+            },
+            {
+              "id": "transformers",
+              "title": "Transformers & Modern AI",
+              "type": "concept",
+              "duration": "40 min",
+              "description": "Self-attention and LLM architecture.",
+              "content": {
+                "topics": [
+                  "Attention mechanism",
+                  "Encoder vs decoder",
+                  "Tokenization",
+                  "Fine-tuning vs prompting"
+                ]
+              }
+            }
+          ]
         },
+
         {
           "id": "nlp",
           "title": "Natural Language Processing",
-          "description": "Working with text and language models",
-          "lessons": []
+          "description": "Text processing, embeddings, and LLM integration.",
+          "lessons": [
+            {
+              "id": "text-processing",
+              "title": "Text Preprocessing & Tokenization",
+              "type": "concept",
+              "duration": "25 min",
+              "description": "Cleaning and preparing text data.",
+              "content": {
+                "topics": [
+                  "Tokenization",
+                  "Stopwords",
+                  "Stemming & Lemmatization",
+                  "TF-IDF"
+                ]
+              }
+            },
+            {
+              "id": "embeddings",
+              "title": "Embeddings & Vector Databases",
+              "type": "concept",
+              "duration": "35 min",
+              "description": "Understanding semantic search.",
+              "content": {
+                "topics": [
+                  "Vector embeddings",
+                  "Cosine similarity",
+                  "Semantic search",
+                  "RAG systems"
+                ]
+              }
+            },
+            {
+              "id": "llm-integration",
+              "title": "LLM Integration in Applications",
+              "type": "project",
+              "duration": "2 hours",
+              "description": "Build an LLM-powered API endpoint."
+            }
+          ]
         },
+
         {
           "id": "computer-vision",
           "title": "Computer Vision",
-          "description": "Image and video analysis",
-          "lessons": []
+          "description": "Image recognition, CNNs, and deployment.",
+          "lessons": [
+            {
+              "id": "cnn-basics",
+              "title": "Convolutional Neural Networks",
+              "type": "concept",
+              "duration": "30 min",
+              "description": "Understanding feature extraction.",
+              "content": {
+                "topics": [
+                  "Convolution layers",
+                  "Pooling",
+                  "Feature maps",
+                  "Transfer learning"
+                ]
+              }
+            },
+            {
+              "id": "vision-deployment",
+              "title": "Deploying Vision Models",
+              "type": "project",
+              "duration": "3 hours",
+              "description": "Serve a vision model via API."
+            }
+          ]
         },
+
+        {
+          "id": "multi-agent-systems",
+          "title": "Multi-Agent Systems & LangGraph",
+          "description": "Build production-grade AI orchestration systems.",
+          "lessons": [
+            {
+              "id": "agent-architecture",
+              "title": "Agent Architecture Patterns",
+              "type": "concept",
+              "duration": "30 min",
+              "description": "Tool use, planning, and structured outputs.",
+              "content": {
+                "topics": [
+                  "Tool calling",
+                  "Structured outputs",
+                  "Agent loops",
+                  "Guardrails"
+                ]
+              }
+            },
+            {
+              "id": "langgraph-basics",
+              "title": "LangGraph Fundamentals",
+              "type": "concept",
+              "duration": "40 min",
+              "description": "StateGraph, nodes, and edges.",
+              "content": {
+                "topics": [
+                  "Typed state",
+                  "Reducers",
+                  "Fan-out/fan-in",
+                  "Parallel execution"
+                ]
+              }
+            },
+            {
+              "id": "dialectical-agents",
+              "title": "Dialectical Multi-Agent Systems",
+              "type": "project",
+              "duration": "4 hours",
+              "description": "Build a Prosecutor/Defense/Tech Lead debate system."
+            }
+          ]
+        },
+
+        {
+          "id": "forensic-ai",
+          "title": "Forensic & Enterprise AI Systems",
+          "description": "Build secure, enterprise-ready AI tooling.",
+          "lessons": [
+            {
+              "id": "git-forensics",
+              "title": "Git History Analysis & Automation",
+              "type": "concept",
+              "duration": "30 min",
+              "description": "Programmatic repository analysis.",
+              "content": {
+                "topics": [
+                  "Secure cloning",
+                  "Parsing git logs",
+                  "Commit pattern analysis",
+                  "Security risks"
+                ]
+              }
+            },
+            {
+              "id": "ast-analysis",
+              "title": "Static Code Analysis with AST",
+              "type": "concept",
+              "duration": "35 min",
+              "description": "Parsing Python code programmatically."
+            },
+            {
+              "id": "secure-tooling",
+              "title": "Secure Tool Engineering",
+              "type": "concept",
+              "duration": "25 min",
+              "description": "Sandboxing, subprocess, and input validation."
+            }
+          ]
+        },
+
         {
           "id": "mlops",
           "title": "MLOps & Deployment",
-          "description": "Production ML systems",
-          "lessons": []
+          "description": "Deploy, monitor, and scale machine learning systems.",
+          "lessons": [
+            {
+              "id": "docker-ai",
+              "title": "Dockerizing AI Systems",
+              "type": "project",
+              "duration": "2 hours",
+              "description": "Containerize an AI service."
+            },
+            {
+              "id": "cloud-deployment",
+              "title": "Deploying on AWS",
+              "type": "concept",
+              "duration": "40 min",
+              "description": "EC2, RDS, S3, IAM fundamentals."
+            },
+            {
+              "id": "monitoring-ai",
+              "title": "Monitoring & Observability",
+              "type": "concept",
+              "duration": "30 min",
+              "description": "Logging, tracing, failure recovery."
+            }
+          ]
+        },
+
+        {
+          "id": "capstone",
+          "title": "Capstone: Autonomous AI Auditor",
+          "description": "Build a full multi-agent AI system from scratch.",
+          "lessons": [
+            {
+              "id": "capstone-design",
+              "title": "System Design & Architecture Planning",
+              "type": "project",
+              "duration": "2 hours",
+              "description": "Design your AI courtroom architecture."
+            },
+            {
+              "id": "capstone-build",
+              "title": "Build & Orchestrate Agents",
+              "type": "project",
+              "duration": "8 hours",
+              "description": "Implement detective and judicial layers."
+            },
+            {
+              "id": "capstone-deploy",
+              "title": "Deploy & Present",
+              "type": "project",
+              "duration": "4 hours",
+              "description": "Deploy and demo your system."
+            }
+          ]
         }
+
       ]
-    },
-    {
-      "id": "data-science",
-      "title": "Data Science",
-      "description": "Analyze data and extract insights",
-      "icon": "BarChart",
-      "color": "from-green-500 to-emerald-500",
-      "modules": []
-    },
-    {
-      "id": "mlops",
-      "title": "MLOps",
-      "description": "Machine learning operations and deployment",
-      "icon": "Settings",
-      "color": "from-purple-500 to-pink-500",
-      "modules": []
-    },
-    {
-      "id": "product-management",
-      "title": "AI Product Management",
-      "description": "Building AI-powered products",
-      "icon": "Package",
-      "color": "from-orange-500 to-red-500",
-      "modules": []
     }
   ]
 }
