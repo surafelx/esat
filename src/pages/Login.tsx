@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword, getIdToken } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdToken } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,20 +9,43 @@ import { Label } from "@/components/ui/label";
 const API_URL = "http://localhost:3000";
 
 const Login = () => {
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [user, setUser] = useState<any>(null);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
+    // Validation
+    if (!isLogin && password !== confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      setLoading(false);
+      return;
+    }
+
     try {
-      // Sign in with Firebase Auth
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      let userCredential;
+      
+      if (isLogin) {
+        // Sign in
+        userCredential = await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        // Sign up
+        userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      }
+      
       const idToken = await getIdToken(userCredential.user);
       
       // Send token to our backend
@@ -38,7 +61,7 @@ const Login = () => {
       const data = await res.json();
       
       if (!res.ok) {
-        setError(data.error || "Login failed");
+        setError(data.error || "Authentication failed");
         return;
       }
       
@@ -52,6 +75,12 @@ const Login = () => {
         setError("Incorrect password");
       } else if (err.code === "auth/invalid-credential") {
         setError("Invalid email or password");
+      } else if (err.code === "auth/email-already-in-use") {
+        setError("Email already registered");
+      } else if (err.code === "auth/weak-password") {
+        setError("Password is too weak");
+      } else if (err.code === "auth/network-request-failed") {
+        setError("Network error. Check your connection");
       } else {
         setError(err.message);
       }
@@ -65,11 +94,11 @@ const Login = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Login Successful!</CardTitle>
+            <CardTitle>Welcome!</CardTitle>
             <CardDescription>You are now logged in</CardDescription>
           </CardHeader>
           <CardContent>
-            <pre className="bg-gray-100 p-4 rounded text-xs overflow-auto">
+            <pre className="bg-gray-100 p-4 rounded text-xs overflow-auto max-h-60">
               {JSON.stringify(user, null, 2)}
             </pre>
             <Button 
@@ -89,11 +118,13 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>AI School - Login</CardTitle>
-          <CardDescription>Sign in with email and password</CardDescription>
+          <CardTitle>AI School - {isLogin ? "Login" : "Sign Up"}</CardTitle>
+          <CardDescription>
+            {isLogin ? "Sign in to your account" : "Create a new account"}
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -114,8 +145,24 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={6}
               />
             </div>
+            
+            {!isLogin && (
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  minLength={6}
+                />
+              </div>
+            )}
             
             {error && (
               <div className="p-3 rounded bg-red-100 text-red-600 text-sm">
@@ -124,12 +171,34 @@ const Login = () => {
             )}
             
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? "Please wait..." : isLogin ? "Sign In" : "Sign Up"}
             </Button>
           </form>
           
           <div className="mt-4 text-center text-sm text-gray-500">
-            <p>Server must be running at {API_URL}</p>
+            {isLogin ? (
+              <>
+                Don't have an account?{" "}
+                <button 
+                  type="button"
+                  onClick={() => { setIsLogin(false); setError(""); }}
+                  className="text-blue-500 hover:underline"
+                >
+                  Sign Up
+                </button>
+              </>
+            ) : (
+              <>
+                Already have an account?{" "}
+                <button 
+                  type="button"
+                  onClick={() => { setIsLogin(true); setError(""); }}
+                  className="text-blue-500 hover:underline"
+                >
+                  Sign In
+                </button>
+              </>
+            )}
           </div>
         </CardContent>
       </Card>
