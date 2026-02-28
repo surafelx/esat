@@ -146,4 +146,25 @@ router.post('/verify', verifyToken, async (req, res) => {
   }
 });
 
+/**
+ * PUT /auth/users/:uid/role
+ * Update user role (admin only)
+ */
+router.put('/users/:uid/role', verifyToken, requireRole('admin'), async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const { role } = req.body;
+    
+    if (!['student', 'instructor', 'admin'].includes(role)) {
+      return res.status(400).json({ error: 'Invalid role' });
+    }
+
+    const profile = await updateUserProfile(uid, { role });
+    res.json(profile);
+  } catch (error) {
+    console.error('Update user role error:', error.message);
+    res.status(500).json({ error: 'Failed to update user role' });
+  }
+});
+
 module.exports = router;
