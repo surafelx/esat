@@ -11,6 +11,7 @@ import Quiz from "./pages/Quiz";
 import Chat from "./pages/Chat";
 import Assignments from "./pages/Assignments";
 import Onboarding from "./pages/Onboarding";
+import AuthTest from "./pages/AuthTest";
 import NotFound from "./pages/NotFound";
 import TalkToMe from "./components/TalkToMe";
 
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/assignments" element={<Assignments />} />
+          <Route path="/auth-test" element={<AuthTest />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
