@@ -69,16 +69,15 @@ const Learn = () => {
   const addXP = (amount: number) => {
     setTotalXP(prev => prev + amount);
     
-    // Show sileo toast notification with theme styling
+    // Show sileo toast notification with light readable styling
     sileo.success({
-      title: `+${amount} XP earned!`,
+      title: `+${amount} XP`,
       description: "Keep up the great work!",
       position: "top-right",
-      fill: "#0a0a0f",
+      fill: "#f97316",
       styles: {
         title: "text-white!",
-        description: "text-gray-400!",
-        badge: "bg-[hsl(0,84%,55%)]!",
+        description: "text-white/80!",
       },
     });
   };
