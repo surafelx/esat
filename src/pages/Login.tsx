@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { signInWithEmailAndPassword, getIdToken } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,16 +21,16 @@ const Login = () => {
     setError("");
 
     try {
-      // For testing - use Firebase Auth on client to get token
-      // In production, use proper Firebase client SDK
-      const mockToken = `mock-token-${Date.now()}`;
+      // Sign in with Firebase Auth
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const idToken = await getIdToken(userCredential.user);
       
+      // Send token to our backend
       const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          idToken: mockToken,
-          email: email,
+          idToken,
           role: "student"
         }),
       });
@@ -42,7 +44,17 @@ const Login = () => {
       
       setUser(data);
     } catch (err: any) {
-      setError(`Connection failed: ${err.message}. Is the server running?`);
+      if (err.code === "auth/invalid-email") {
+        setError("Invalid email address");
+      } else if (err.code === "auth/user-not-found") {
+        setError("No user found with this email");
+      } else if (err.code === "auth/wrong-password") {
+        setError("Incorrect password");
+      } else if (err.code === "auth/invalid-credential") {
+        setError("Invalid email or password");
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -78,7 +90,7 @@ const Login = () => {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>AI School - Login</CardTitle>
-          <CardDescription>Sign in to access your account</CardDescription>
+          <CardDescription>Sign in with email and password</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
