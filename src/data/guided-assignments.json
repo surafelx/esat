@@ -1,0 +1,466 @@
+{
+  "guidedAssignments": [
+    {
+      "id": "ai-orchestration-engineer",
+      "title": "AI Orchestration Engineer",
+      "description": "Build multi-agent AI systems with structured output validation, forensic analysis, and deterministic synthesis",
+      "icon": "Brain",
+      "color": "from-purple-500 to-pink-500",
+      "totalDuration": "6 weeks",
+      "modules": [
+        {
+          "id": "module-1",
+          "title": "Python Foundations",
+          "description": "AST parsing, subprocess, and typed Python for AI tooling",
+          "duration": "1 week",
+          "sections": [
+            {
+              "type": "learning-objectives",
+              "title": "What to learn",
+              "content": [
+                "Python AST (Abstract Syntax Tree) parsing",
+                "subprocess + tempfile for secure tooling",
+                "Python typing (TypedDict, Annotated, Pydantic)"
+              ],
+              "code": "import ast\n\nclass ASTParser(ast.NodeVisitor):\n    def __init__(self):\n        self.classes = []\n        self.functions = []\n        self.calls = []\n    \n    def visit_ClassDef(self, node):\n        self.classes.append(node.name)\n        self.generic_visit(node)\n    \n    def visit_FunctionDef(self, node):\n        self.functions.append(node.name)\n        self.generic_visit(node)\n    \n    def visit_Call(self, node):\n        if isinstance(node.func, ast.Name):\n            self.calls.append(node.func.id)\n        self.generic_visit(node)\n\n# Usage\ncode = '''\nclass MyAgent:\n    def __init__(self):\n        self.model = load_model()\n    \n    def run(self):\n        return self.model.predict()\n'''\n\ntree = ast.parse(code)\nparser = ASTParser()\nparser.visit(tree)\nprint(f\"Classes: {parser.classes}\")\nprint(f\"Functions: {parser.functions}\")",
+              "implementation": "Build an AST parser that extracts: 1) All class definitions with their methods, 2) All function definitions, 3) All function calls. Use the ast module to walk through Python source code and collect metadata about the code structure.",
+              "notes": "AST (Abstract Syntax Tree) is Python's internal representation of code. Each node represents a syntax element like a function, class, or expression. The ast module provides tools to analyze and transform code programmatically.",
+              "video": "https://www.youtube.com/watch?v=amHJcD7utrM"
+            },
+            {
+              "type": "resources",
+              "title": "Learning Resources",
+              "items": [
+                {
+                  "category": "AST Docs",
+                  "description": "Official Python AST documentation",
+                  "url": "https://docs.python.org/3/library/ast.html"
+                },
+                {
+                  "category": "Pydantic",
+                  "description": "Pydantic official docs for structured state",
+                  "url": "https://docs.pydantic.dev/"
+                }
+              ],
+              "code": "from pydantic import BaseModel, Field\nfrom typing import Optional, List\n\nclass AgentState(BaseModel):\n    agent_id: str\n    current_task: Optional[str] = None\n    completed_tasks: List[str] = Field(default_factory=list)\n    metadata: dict = Field(default_factory=dict)\n\n# Usage\nstate = AgentState(agent_id=\"agent-001\")\nstate.current_task = \"Analyze repository\"\nprint(state.model_dump())",
+              "implementation": "Create typed data models using Pydantic for agent state management. Define models for: 1) Agent configuration, 2) Task definitions, 3) Execution results. Use Field for validation and defaults.",
+              "notes": "Pydantic provides runtime validation and type coercion. It's essential for structured state in AI applications where you need guaranteed data shapes.",
+              "video": "https://www.youtube.com/watch?v=v3eXoY7X5Yw"
+            },
+            {
+              "type": "creative-learning",
+              "title": "Creative Learning",
+              "items": [
+                {
+                  "method": "Visual Learning",
+                  "description": "Draw AST tree diagrams showing how code maps to nodes"
+                },
+                {
+                  "method": "Hands-On",
+                  "description": "Parse real Python files and extract code metrics"
+                }
+              ],
+              "code": "import subprocess\nimport tempfile\nimport os\n\ndef run_git_command(repo_path: str, command: str) -> str:\n    \"\"\"Execute git command safely\"\"\"\n    with tempfile.TemporaryDirectory() as tmpdir:\n        result = subprocess.run(\n            ['git', '-C', repo_path] + command.split(),\n            capture_output=True,\n            text=True,\n            cwd=tmpdir\n        )\n        return result.stdout\n\n# Usage\ncommits = run_git_command('/path/to/repo', 'log --oneline -10')\nprint(commits)",
+              "implementation": "Create a git automation script that: 1) Extracts commit history, 2) Analyzes commit patterns, 3) Generates a commit summary report. Use subprocess to call git commands safely.",
+              "notes": "Git automation enables forensic analysis of codebases. Understanding commit history helps trace the evolution of AI systems and identify patterns.",
+              "video": ""
+            },
+            {
+              "type": "testing",
+              "title": "Testing Ideas",
+              "items": [
+                {
+                  "description": "Write tests for AST parser to verify class and function detection"
+                }
+              ],
+              "code": "import pytest\nfrom ast_parser import ASTParser\nimport ast\n\ndef test_finds_classes():\n    code = \"\"\"class Agent:\\n    def run(self):\\n        pass\"\"\"\n    tree = ast.parse(code)\n    parser = ASTParser()\n    parser.visit(tree)\n    assert \"Agent\" in parser.classes\n\ndef test_finds_functions():\n    code = \"\"\"def initialize():\\n    pass\\n\\ndef execute():\\n    pass\"\"\"\n    tree = ast.parse(code)\n    parser = ASTParser()\n    parser.visit(tree)\n    assert \"initialize\" in parser.functions\n    assert \"execute\" in parser.functions\n\ndef test_reports_missing_imports():\n    code = \"\"\"from nonexistent import Something\"\"\"\n    # Implement import detection\n    pass",
+              "implementation": "Write comprehensive tests for your AST parser: 1) Test class detection, 2) Test function detection, 3) Test import reporting. Use pytest fixtures for test code samples.",
+              "notes": "Testing is critical for AI tooling. Well-tested code ensures reliability in production AI systems.",
+              "video": "https://www.youtube.com/watch?v=6uL4wZoHhqU"
+            }
+          ],
+          "extras": [
+            { "title": "Advanced AST Patterns", "type": "bonus" },
+            { "title": "Type Guards Deep Dive", "type": "bonus" }
+          ]
+        },
+        {
+          "id": "module-2",
+          "title": "Git Forensic Tooling",
+          "description": "Extract and analyze commit history for AI systems",
+          "duration": "1 week",
+          "sections": [
+            {
+              "type": "learning-objectives",
+              "title": "What to learn",
+              "content": [
+                "Using git from Python",
+                "Extracting structured commit history",
+                "Pattern analysis of development"
+              ],
+              "code": "import subprocess\nfrom dataclasses import dataclass\nfrom typing import List\nfrom datetime import datetime\n\n@dataclass\nclass Commit:\n    hash: str\n    message: str\n    author: str\n    date: datetime\n    files_changed: int\n\ndef get_commit_history(repo_path: str, limit: int = 100) -> List[Commit]:\n    cmd = f'log --pretty=format:\"%H|%s|%an|%ad|%h\" --date=iso -n {limit}'\n    result = subprocess.run(\n        ['git', '-C', repo_path] + cmd.split('|'),\n        capture_output=True, text=True\n    )\n    \n    commits = []\n    for line in result.stdout.strip().split('\\n'):\n        if line:\n            hash_, message, author, date, files = line.split('|')\n            commits.append(Commit(\n                hash=hash_[:7],\n                message=message,\n                author=author,\n                date=datetime.fromisoformat(date.strip()),\n                files_changed=int(files)\n            ))\n    return commits",
+              "implementation": "Build a commit history extractor that: 1) Parses git log output, 2) Creates structured Commit objects, 3) Extracts metadata like author, date, message, and file changes.",
+              "notes": "Git forensics helps understand the development patterns of AI systems. Analyzing commit patterns reveals collaboration styles and code evolution.",
+              "video": "https://www.youtube.com/watch?v=ecK3EnyGD8o"
+            },
+            {
+              "type": "resources",
+              "title": "Learning Resources",
+              "items": [
+                {
+                  "category": "Git automation",
+                  "description": "Scripts calling git log via subprocess"
+                }
+              ],
+              "code": "import subprocess\nfrom pathlib import Path\n\ndef analyze_branch_pattern(repo: Path) -> dict:\n    \"\"\"Analyze if repo uses trunk-based or feature branches\"\"\"\n    \n    # Get all branch names\n    branches = subprocess.run(\n        ['git', 'branch', '-a'],\n        cwd=repo, capture_output=True, text=True\n    ).stdout.split('\\n')\n    \n    # Get commit count per branch\n    branch_stats = {}\n    for branch in branches:\n        if branch.strip():\n            name = branch.strip().replace('* ', '')\n            count = subprocess.run(\n                ['git', 'rev-list', '--count', name],\n                cwd=repo, capture_output=True, text=True\n            ).stdout.strip()\n            branch_stats[name] = int(count)\n    \n    return {\n        'total_branches': len(branch_stats),\n        'branch_stats': branch_stats,\n        'pattern': 'feature-branches' if len(branch_stats) > 3 else 'trunk-based'\n    }",
+              "implementation": "Create a branch pattern analyzer that: 1) Detects branch strategy (trunk vs feature branches), 2) Calculates commit distribution, 3) Generates a workflow report.",
+              "notes": "Understanding branching strategies helps assess codebase maintainability and team collaboration patterns.",
+              "video": ""
+            },
+            {
+              "type": "creative-learning",
+              "title": "Creative Learning",
+              "items": [
+                {
+                  "method": "Experiment",
+                  "description": "Generate controlled git history and analyze it"
+                },
+                {
+                  "method": "Challenge",
+                  "description": "Detect bulk upload vs incremental commits"
+                }
+              ],
+              "code": "def detect_commit_pattern(commits: List[dict]) -> str:\n    \"\"\"Detect if commits are bulk upload or incremental\"\"\"\n    if not commits:\n        return \"unknown\"\n    \n    # Calculate time gaps between commits\n    time_gaps = []\n    for i in range(1, len(commits)):\n        gap = (commits[i]['date'] - commits[i-1]['date']).total_seconds()\n        time_gaps.append(gap)\n    \n    avg_gap = sum(time_gaps) / len(time_gaps) if time_gaps else 0\n    \n    # Bulk upload: large files, short time between commits\n    avg_files = sum(c['files_changed'] for c in commits) / len(commits)\n    \n    if avg_gap < 60 and avg_files > 10:  # Less than minute, many files\n        return \"bulk_upload\"\n    elif avg_gap > 3600:  # More than hour between commits\n        return \"incremental\"\n    else:\n        return \"standard\"",
+              "implementation": "Build a pattern detector that: 1) Analyzes time gaps between commits, 2) Measures files changed per commit, 3) Classifies as bulk upload or incremental development.",
+              "notes": "Commit pattern analysis reveals development methodology. Bulk uploads often indicate initial project setup while incremental shows ongoing development.",
+              "video": "https://www.youtube.com/watch?v=QB9p8xX6Fo0"
+            },
+            {
+              "type": "testing",
+              "title": "Testing Ideas",
+              "items": [
+                {
+                  "description": "Test with single commit vs progressive commits repos"
+                }
+              ],
+              "code": "import pytest\nfrom git_forensics import CommitAnalyzer, detect_commit_pattern\n\ndef test_single_commit_detection():\n    commits = [\n        {'date': '2024-01-01', 'files_changed': 50}\n    ]\n    pattern = detect_commit_pattern(commits)\n    assert pattern == \"bulk_upload\"\n\ndef test_incremental_detection():\n    from datetime import timedelta\n    commits = [\n        {'date': datetime(2024, 1, 1, 10, 0), 'files_changed': 2},\n        {'date': datetime(2024, 1, 1, 12, 0), 'files_changed': 3},\n        {'date': datetime(2024, 1, 1, 14, 0), 'files_changed': 1},\n    ]\n    pattern = detect_commit_pattern(commits)\n    assert pattern == \"incremental\"",
+              "implementation": "Write tests for commit pattern detection using synthetic git histories. Test edge cases like single commits, rapid uploads, and spaced incremental commits.",
+              "notes": "Testing with synthetic data ensures your detector works correctly across different scenarios.",
+              "video": ""
+            }
+          ],
+          "extras": [
+            { "title": "Git Hooks Automation", "type": "bonus" },
+            { "title": "Commit Message Analysis", "type": "bonus" }
+          ]
+        },
+        {
+          "id": "module-3",
+          "title": "LangGraph Orchestration",
+          "description": "Multi-agent state orchestration with LangGraph",
+          "duration": "1.5 weeks",
+          "sections": [
+            {
+              "type": "learning-objectives",
+              "title": "What to learn",
+              "content": [
+                "LangGraph graph design",
+                "Parallel execution (fan-out/fan-in)",
+                "State reducers"
+              ],
+              "code": "from langgraph.graph import StateGraph, END\nfrom typing import TypedDict, List\n\nclass AgentState(TypedDict):\n    messages: List[str]\n    tasks: List[str]\n    results: List[str]\n\ndef analyzer_node(state: AgentState) -> AgentState:\n    \"\"\"Analyze the input task\"\"\"\n    return {\n        **state,\n        'tasks': ['analyze_code', 'extract_patterns']\n    }\n\ndef parallel_worker_1(state: AgentState) -> AgentState:\n    \"\"\"Worker 1: Code analysis\"\"\"\n    return {'results': state.get('results', []) + ['analysis_complete']}\n\ndef parallel_worker_2(state: AgentState) -> AgentState:\n    \"\"\"Worker 2: Pattern extraction\"\"\"\n    return {'results': state.get('results', []) + ['patterns_extracted']}\n\ndef aggregator(state: AgentState) -> AgentState:\n    \"\"\"Combine results from parallel workers\"\"\"\n    return {'messages': state.get('messages', []) + [f\"Final: {state['results']}\"]}\n\n# Build the graph\ngraph = StateGraph(AgentState)\ngraph.add_node('analyzer', analyzer_node)\ngraph.add_node('worker_1', parallel_worker_1)\ngraph.add_node('worker_2', parallel_worker_2)\ngraph.add_node('aggregator', aggregator)\n\ngraph.set_entry_point('analyzer')\ngraph.add_edge('analyzer', 'worker_1')\ngraph.add_edge('analyzer', 'worker_2')\ngraph.add_edge('worker_1', 'aggregator')\ngraph.add_edge('worker_2', 'aggregator')\ngraph.add_edge('aggregator', END)\n\napp = graph.compile()",
+              "implementation": "Build a LangGraph with: 1) Initial analyzer node, 2) Two parallel worker nodes (fan-out), 3) Aggregator node (fan-in), 4) Proper state management with reducers.",
+              "notes": "LangGraph enables complex multi-agent workflows. Understanding fan-out/fan-in patterns is essential for parallel AI processing.",
+              "video": "https://www.youtube.com/watch?v=ahmKszIk-Ys"
+            },
+            {
+              "type": "resources",
+              "title": "Learning Resources",
+              "items": [
+                {
+                  "category": "LangGraph Tutorial",
+                  "description": "Real Python LangGraph guide",
+                  "url": "https://realpython.com/langgraph-intro/"
+                }
+              ],
+              "code": "from langgraph.graph import StateGraph\nfrom typing import TypedDict\nfrom operator import add\n\nclass CounterState(TypedDict):\n    count: int\n\n# WITHOUT reducer - overwrites!\ndef bad_increment(state: CounterState):\n    return {'count': state['count'] + 1}\n\n# WITH reducer - accumulates!\ndef good_increment(state: CounterState):\n    return {'count': [state['count'][0] + 1]}  # Note: list for reducer\n\ngraph = StateGraph(CounterState)\n\n# Add nodes - notice we pass the function directly\ngraph.add_node('increment', good_increment)\ngraph.set_entry_point('increment')\ngraph.add_edge('increment', 'increment')  # Loop!\n\napp = graph.compile()\n\n# State reducer ensures parallel nodes don't overwrite each other\nstate = app.invoke({'count': [0]}, {'recursion_limit': 5})\nprint(state)",
+              "implementation": "Create examples showing: 1) Why reducers are needed, 2) How to implement them, 3) Testing that parallel node outputs are combined correctly.",
+              "notes": "Reducers are critical in LangGraph. Without them, parallel nodes overwrite each other's state. With proper reducers, all outputs are combined.",
+              "video": "https://www.youtube.com/watch?v=FsJq8g8qRw0"
+            },
+            {
+              "type": "creative-learning",
+              "title": "Creative Learning",
+              "items": [
+                {
+                  "method": "Build mini graphs",
+                  "description": "Create START to parallel nodes to aggregator to END"
+                }
+              ],
+              "code": "# Mini graph with typed state\nfrom langgraph.graph import StateGraph\nfrom pydantic import BaseModel\n\nclass MiniState(BaseModel):\n    input: str\n    outputs: list = []\n    final: str = \"\"\n\ndef node_a(state):\n    return {'outputs': [f\"processed_{state['input']}\"]}\n\ndef node_b(state):\n    return {'outputs': [f\"validated_{state['input']}\"]}\n\ndef combiner(state):\n    combined = \" + \".join(state['outputs'])\n    return {'final': combined}\n\ngraph = StateGraph(MiniState)\ngraph.add_node('a', node_a)\ngraph.add_node('b', node_b)\ngraph.add_node('combine', combiner)\ngraph.set_entry_point('a')\ngraph.add_edge('a', 'b')\ngraph.add_edge('b', 'combine')\n\napp = graph.compile()\nresult = app.invoke({'input': 'test'})",
+              "implementation": "Build a minimal working graph demonstrating: 1) Multiple nodes, 2) State passing between nodes, 3) Combining results at the end.",
+              "notes": "Start simple. Master the basics before adding complexity like conditional edges or cycles.",
+              "video": ""
+            },
+            {
+              "type": "testing",
+              "title": "Testing Ideas",
+              "items": [
+                {
+                  "description": "Test parallel node state mutations"
+                }
+              ],
+              "code": "import pytest\nfrom langgraph.graph import StateGraph\nfrom typing import TypedDict\n\nclass TestState(TypedDict):\n    values: list\n\ndef worker_a(state):\n    return {'values': ['a_result']}\n\ndef worker_b(state):\n    return {'values': ['b_result']}\n\ndef combiner(state):\n    # Should have both results!\n    return {'values': state['values']}\n\n# Build and test\ngraph = StateGraph(TestState)\ngraph.add_node('a', worker_a)\ngraph.add_node('b', worker_b)\ngraph.add_node('combine', combiner)\ngraph.set_entry_point('a')\ngraph.add_edge('a', 'b')\ngraph.add_edge('b', 'combine')\n\napp = graph.compile()\nresult = app.invoke({'values': []})\n\n# Verify both parallel results are present\nassert 'a_result' in result['values'], \"Worker A result missing!\"\nassert 'b_result' in result['values'], \"Worker B result missing!\"",
+              "implementation": "Write unit tests that: 1) Invoke graphs with test state, 2) Verify state mutations, 3) Check reducer behavior with parallel execution.",
+              "notes": "Testing graphs is essential. Always verify that state flows correctly through your nodes.",
+              "video": "https://www.youtube.com/watch?v=8jN8r3_fjSs"
+            }
+          ],
+          "extras": [
+            { "title": "Custom State Classes", "type": "bonus" },
+            { "title": "Memory Management", "type": "bonus" }
+          ]
+        },
+        {
+          "id": "module-4",
+          "title": "PDF and Hallucination",
+          "description": "PDF parsing and hallucination detection in AI reports",
+          "duration": "1 week",
+          "sections": [
+            {
+              "type": "learning-objectives",
+              "title": "What to learn",
+              "content": [
+                "PDF text extraction",
+                "Cross-referencing with code",
+                "Hallucination detection"
+              ],
+              "code": "import pdfplumber\nfrom pathlib import Path\n\ndef extract_text_from_pdf(pdf_path: Path) -> str:\n    \"\"\"Extract all text from a PDF file\"\"\"\n    text = \"\"\n    with pdfplumber.open(pdf_path) as pdf:\n        for page in pdf.pages:\n            text += page.extract_text() + \"\\n\"\n    return text\n\ndef chunk_text(text: str, chunk_size: int = 500) -> list:\n    \"\"\"Split text into chunks for analysis\"\"\"\n    words = text.split()\n    chunks = []\n    for i in range(0, len(words), chunk_size):\n        chunks.append(' '.join(words[i:i+chunk_size]))\n    return chunks\n\n# Usage\npdf_text = extract_text_from_pdf(Path(\"report.pdf\"))\nchunks = chunk_text(pdf_text)\nprint(f\"Extracted {len(chunks)} chunks\")",
+              "implementation": "Build a PDF extractor that: 1) Uses pdfplumber to extract text, 2) Chunks text into manageable pieces, 3) Handles multi-page PDFs.",
+              "notes": "PDF extraction is foundational for analyzing AI-generated reports. Chunking enables granular analysis.",
+              "video": "https://www.youtube.com/watch?v=6Mcll0plTbE"
+            },
+            {
+              "type": "resources",
+              "title": "Learning Resources",
+              "items": [
+                {
+                  "category": "PDF extraction",
+                  "description": "PyPDF2, pdfplumber tutorials"
+                }
+              ],
+              "code": "import pdfplumber\nfrom PIL import Image\nimport io\n\ndef extract_images(pdf_path: str) -> list:\n    \"\"\"Extract all images from PDF\"\"\"\n    images = []\n    with pdfplumber.open(pdf_path) as pdf:\n        for page_num, page in enumerate(pdf.pages):\n            for img_index, img in enumerate(page.images):\n                # Get image data\n                x0, y0, x1, y1 = img['x0'], img['y0'], img['x1'], img['y1']\n                bbox = (x0, y0, x1, y1)\n                \n                # Crop image from page\n                crop = page.crop(bbox)\n                img_data = crop.to_image(resolution=150)\n                \n                images.append({\n                    'page': page_num + 1,\n                    'index': img_index,\n                    'data': img_data.original\n                })\n    \n    return images\n\n# Usage\nimages = extract_images(\"document.pdf\")\nprint(f\"Found {len(images)} images\")",
+              "implementation": "Create an image extractor from PDFs: 1) Extract all images, 2) Track page numbers, 3) Save images for analysis.",
+              "notes": "Images may contain charts, diagrams, or visual evidence. Extracting them enables comprehensive analysis.",
+              "video": ""
+            },
+            {
+              "type": "creative-learning",
+              "title": "Creative Learning",
+              "items": [
+                {
+                  "method": "Chunk and Search",
+                  "description": "Load and chunk PDF text for rubric analysis"
+                }
+              ],
+              "code": "import pdfplumber\nimport re\nfrom pathlib import Path\n\ndef find_file_references(text: str, repo_path: Path) -> dict:\n    \"\"\"Find file paths mentioned in text and verify they exist\"\"\"\n    \n    # Common patterns for file references\n    patterns = [\n        r'(?:file|path):\\s*([/\\w.-]+\\.\\w+)',\n        r'`([/\\w.-]+\\.\\w+)`',\n        r'src/([/\\w.-]+\\.\\w+)',\n    ]\n    \n    found_files = []\n    for pattern in patterns:\n        matches = re.findall(pattern, text)\n        found_files.extend(matches)\n    \n    # Verify each file exists\n    results = {'valid': [], 'invalid': [], 'unverified': []}\n    for file_path in set(found_files):\n        full_path = repo_path / file_path\n        if full_path.exists():\n            results['valid'].append(file_path)\n        elif not file_path.startswith('/') and not file_path.startswith('src'):\n            results['unverified'].append(file_path)\n        else:\n            results['invalid'].append(file_path)\n    \n    return results\n\n# Usage\ntext = \"The agent uses src/agent.py and config/settings.json\"\nresults = find_file_references(text, Path(\"./myrepo\"))",
+              "implementation": "Build a cross-reference tool that: 1) Finds file path references in text, 2) Checks if files exist in the repository, 3) Reports invalid references.",
+              "notes": "Cross-referencing detects hallucinations where AI claims files exist that don't.",
+              "video": "https://www.youtube.com/watch?v=zLecLqFjG0E"
+            },
+            {
+              "type": "testing",
+              "title": "Testing Ideas",
+              "items": [
+                {
+                  "description": "Test hallucination detection with fake vs real references"
+                }
+              ],
+              "code": "import pytest\nfrom hallucination_detector import find_file_references\nfrom pathlib import Path\nfrom unittest.mock import MagicMock\n\ndef test_detects_nonexistent_file():\n    \"\"\"Should flag references to files that don't exist\"\"\"\n    text = \"The system uses src/nonexistent.py\"\n    repo = MagicMock(spec=Path)\n    repo.__truediv__ = lambda self, x: MagicMock(exists=lambda: False)\n    \n    results = find_file_references(text, repo)\n    assert 'src/nonexistent.py' in results['invalid']\n\ndef test_accepts_valid_file():\n    \"\"\"Should accept references to existing files\"\"\"\n    text = \"The agent uses src/main.py\"\n    \n    def mock_exists():\n        return True\n    \n    mock_path = MagicMock()\n    mock_path.exists = mock_exists\n    repo = MagicMock()\n    repo.__truediv__ = lambda self, x: mock_path\n    \n    results = find_file_references(text, repo)\n    assert 'src/main.py' in results['valid']",
+              "implementation": "Write tests for hallucination detection: 1) Test with fake file references, 2) Test with valid references, 3) Test edge cases like partial matches.",
+              "notes": "Testing ensures your detector catches hallucinations reliably.",
+              "video": ""
+            }
+          ],
+          "extras": [
+            { "title": "Image Extraction", "type": "bonus" },
+            { "title": "Table Parsing", "type": "bonus" }
+          ]
+        },
+        {
+          "id": "module-5",
+          "title": "Structured LLM Output",
+          "description": "JSON schemas and prompt engineering for AI outputs",
+          "duration": "1 week",
+          "sections": [
+            {
+              "type": "learning-objectives",
+              "title": "What to learn",
+              "content": [
+                "Structured output enforcement",
+                "Prompt engineering"
+              ],
+              "code": "from pydantic import BaseModel\nfrom typing import List, Optional\n\nclass EvaluationResult(BaseModel):\n    score: int\n    argument: str\n    cited_evidence: List[str]\n    confidence: float\n\ndef create_judge_prompt(evidence: str, rubric: str) -> str:\n    \"\"\"Create a structured judgment prompt\"\"\"\n    return f\"\"\"\nYou are an expert evaluator. Analyze the following evidence against the rubric.\n\nEVIDENCE:\n{evidence}\n\nRUBRIC:\n{rubric}\n\nProvide your evaluation in this exact JSON format:\n{{\n    \"score\": <integer 1-5>,\n    \"argument\": \"<your reasoning>\",\n    \"cited_evidence\": [\"<evidence id>\", ...],\n    \"confidence\": <float 0-1>\n}}\n\nRespond with ONLY valid JSON, no additional text.\n\"\"\"\n\ndef parse_llm_response(response: str, retries: int = 3) -> Optional[EvaluationResult]:\n    \"\"\"Parse LLM response with retry logic\"\"\"\n    import json\n    \n    for attempt in range(retries):\n        try:\n            # Try to find JSON in response\n            json_match = response.find('{')\n            if json_match >= 0:\n                json_str = response[json_match:]\n                data = json.loads(json_str)\n                return EvaluationResult(**data)\n        except (json.JSONDecodeError, ValidationError):\n            continue\n    \n    return None",
+              "implementation": "Build a structured output system with: 1) Pydantic model for evaluation results, 2) Prompt template for structured judgments, 3) Response parser with retry logic.",
+              "notes": "Structured output is essential for AI systems. Pydantic ensures type safety and validation.",
+              "video": "https://www.youtube.com/watch?v=KwAJK47fOAU"
+            },
+            {
+              "type": "resources",
+              "title": "Learning Resources",
+              "items": [
+                {
+                  "category": "LangChain Output",
+                  "description": "Structured output documentation",
+                  "url": "https://python.langchain.com/docs/concepts/structured_output/"
+                }
+              ],
+              "code": "from langchain.output_parsers import StructuredOutputParser, ResponseSchema\n\n# Define expected output schema\nresponse_schemas = [\n    ResponseSchema(name=\"score\", description=\"Evaluation score from 1-5\"),\n    ResponseSchema(name=\"argument\", description=\"Reasoning for the evaluation\"),\n    ResponseSchema(name=\"cited_evidence\", description=\"List of evidence IDs cited\"),\n]\n\nparser = StructuredOutputParser(response_schemas=response_schemas)\n\n# Create prompt with format instructions\nformat_instructions = parser.get_format_instructions()\n\nprompt = f\"\"\"\nEvaluate the following code quality.\n\nCode: {code_snippet}\n\n{format_instructions}\n\"\"\"\n\n# Use with LLM\n# response = llm.invoke(prompt)\n# result = parser.parse(response)",
+              "implementation": "Implement structured output using LangChain: 1) Define ResponseSchema, 2) Create output parser, 3) Inject format instructions into prompts.",
+              "notes": "LangChain's output parsers simplify structured response handling.",
+              "video": ""
+            },
+            {
+              "type": "creative-learning",
+              "title": "Creative Learning",
+              "items": [
+                {
+                  "method": "Prompt Patterns",
+                  "description": "Build structured judgment prompt template"
+                }
+              ],
+              "code": "class PromptTemplate:\n    def __init__(self, template: str):\n        self.template = template\n    \n    def format(self, **kwargs) -> str:\n        return self.template.format(**kwargs)\n\n# Create reusable templates\nJUDGE_TEMPLATE = PromptTemplate(\n    \"\"\"\nYou are {role}.\n\nEvaluate: {subject}\n\nCriteria:\n{criteria}\n\nRespond in JSON:\n{{\"score\": int, \"argument\": str, \"evidence\": list}}\n\"\"\"\n)\n\nCRITIQUE_TEMPLATE = PromptTemplate(\n    \"\"\"\nAnalyze the following from a {perspective} perspective:\n\nContent: {content}\n\nProvide:\n- Strengths: [...]\n- Weaknesses: [...]\n- Suggestions: [...]\n\nJSON format required.\n\"\"\"\n)\n\n# Usage\nprompt = JUDGE_TEMPLATE.format(\n    role=\"Code Reviewer\",\n    subject=\"AI Agent Architecture\",\n    criteria=\"Modularity, Performance, Maintainability\"\n)",
+              "implementation": "Build a prompt template system: 1) Template class with formatting, 2) Multiple template types (judge, critique, analysis), 3) JSON output enforcement.",
+              "notes": "Reusable templates ensure consistent prompting across your AI system.",
+              "video": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            },
+            {
+              "type": "testing",
+              "title": "Testing Ideas",
+              "items": [
+                {
+                  "description": "Test retry on malformed JSON"
+                }
+              ],
+              "code": "import pytest\nfrom structured_output import parse_llm_response, EvaluationResult\n\ndef test_valid_json_parses():\n    response = '''\n    {\n        \"score\": 4,\n        \"argument\": \"Good code structure\",\n        \"cited_evidence\": [\"src/main.py\"]\n    }\n    '''\n    result = parse_llm_response(response)\n    assert result.score == 4\n    assert result.argument == \"Good code structure\"\n\ndef test_malformed_json_triggers_retry():\n    # First two attempts are invalid\n    responses = [\n        \"Here's my evaluation: { score: 3 }\",  # Invalid\n        \"score=3, argument=bad\",  # Invalid\n        '{\"score\": 3, \"argument\": \"good\", \"cited_evidence\": []}',  # Valid\n    ]\n    \n    # Would need mock to cycle through responses\n    result = parse_llm_response(responses[0], retries=3)\n    # Should eventually succeed or return None\n    assert result is None or isinstance(result, EvaluationResult)",
+              "implementation": "Write tests for: 1) Valid JSON parsing, 2) Malformed JSON handling, 3) Retry behavior, 4) Edge cases like missing fields.",
+              "notes": "Testing output parsing is critical. Malformed responses happen frequently with LLMs.",
+              "video": ""
+            }
+          ],
+          "extras": [
+            { "title": "Function Calling", "type": "bonus" },
+            { "title": "Tool Use Patterns", "type": "bonus" }
+          ]
+        },
+        {
+          "id": "module-6",
+          "title": "Synthesis Engine",
+          "description": "Conflict resolution and deterministic verdict synthesis",
+          "duration": "1.5 weeks",
+          "sections": [
+            {
+              "type": "learning-objectives",
+              "title": "What to learn",
+              "content": [
+                "Conflict resolution logic",
+                "Rule enforcement"
+              ],
+              "code": "from typing import List, Optional\nfrom enum import Enum\n\nclass Verdict(Enum):\n    APPROVED = \"approved\"\n    REJECTED = \"rejected\"\n    NEEDS_REVISION = \"needs_revision\"\n\nclass JudgeOpinion:\n    def __init__(self, judge_id: str, score: int, argument: str, evidence: List[str]):\n        self.judge_id = judge_id\n        self.score = score\n        self.argument = argument\n        self.evidence = evidence\n\nclass SynthesisEngine:\n    def __init__(self):\n        self.rules = []\n    \n    def add_rule(self, rule_fn):\n        \"\"\"Add a deterministic rule\"\"\"\n        self.rules.append(rule_fn)\n    \n    def synthesize(self, opinions: List[JudgeOpinion]) -> dict:\n        \"\"\"Combine multiple judge opinions into final verdict\"\"\"\n        # Apply rules in order\n        for rule in self.rules:\n            result = rule(opinions)\n            if result:\n                return result\n        \n        # Default: average score\n        avg_score = sum(o.score for o in opinions) / len(opinions)\n        \n        return {\n            'verdict': Verdict.APPROVED if avg_score >= 3 else Verdict.REJECTED,\n            'final_score': avg_score,\n            'consensus': len([o for o in opinions if o.score >= 3]) / len(opinions)\n        }\n\n# Example rule: security override\ndef security_override(opinions: List[JudgeOpinion]) -> Optional[dict]:\n    \"\"\"If any judge identifies security issues, cap the score\"\"\"\n    security_keywords = ['security', 'vulnerability', 'exploit', 'injection']\n    \n    for opinion in opinions:\n        for keyword in security_keywords:\n            if keyword in opinion.argument.lower():\n                return {\n                    'verdict': Verdict.REJECTED,\n                    'reason': 'Security issue detected',\n                    'capped_score': max(2, opinion.score - 2)\n                }\n    return None",
+              "implementation": "Build a synthesis engine with: 1) JudgeOpinion class, 2) Multiple judge aggregation, 3) Rule-based overrides, 4) Consensus calculation.",
+              "notes": "The synthesis engine is the 'Chief Justice' - it resolves conflicts and enforces deterministic rules.",
+              "video": "https://www.youtube.com/watch?v=t8JmAuT3XcU"
+            },
+            {
+              "type": "resources",
+              "title": "Learning Resources",
+              "items": [
+                {
+                  "category": "Hybrid Systems",
+                  "description": "LLM + deterministic rules articles"
+                }
+              ],
+              "code": "# Rule priority system\nclass RulePriority:\n    SECURITY = 1      # Highest priority\n    SAFETY = 2\n    ACCURACY = 3\n    STYLE = 4         # Lowest priority\n\nclass DeterministicSynthesizer:\n    def __init__(self):\n        self.rules = {}\n    \n    def register_rule(self, name: str, priority: int, rule_fn):\n        \"\"\"Register a rule with priority\"\"\"\n        if priority not in self.rules:\n            self.rules[priority] = []\n        self.rules[priority].append((name, rule_fn))\n    \n    def apply(self, context: dict) -> dict:\n        \"\"\"Apply rules in priority order\"\"\"\n        for priority in sorted(self.rules.keys()):\n            for name, rule_fn in self.rules[priority]:\n                result = rule_fn(context)\n                if result:\n                    return {\n                        'applied_rule': name,\n                        'priority': priority,\n                        'result': result\n                    }\n        return {'result': 'no_rules_triggered'}\n\n# Usage\nsynth = DeterministicSynthesizer()\nsynth.register_rule('security_check', RulePriority.SECURITY, \n    lambda ctx: {'reject': True} if ctx.get('has_vuln') else None)",
+              "implementation": "Create a rule priority system: 1) Define rule priorities (security highest), 2) Register rules with priorities, 3) Apply rules in order.",
+              "notes": "Rule priority ensures deterministic overrides. Security rules always execute first.",
+              "video": ""
+            },
+            {
+              "type": "creative-learning",
+              "title": "Creative Learning",
+              "items": [
+                {
+                  "method": "Simulation",
+                  "description": "Generate sample opinions and test verdict logic"
+                }
+              ],
+              "code": "# Generate test opinions\ndef generate_test_opinions() -> List[JudgeOpinion]:\n    return [\n        JudgeOpinion(\n            judge_id=\"prosecutor\",\n            score=1,\n            argument=\"Security flaw in authentication module\",\n            evidence=[\"auth.py:45\"]\n        ),\n        JudgeOpinion(\n            judge_id=\"defense\",\n            score=5,\n            argument=\"Deep metacognition achieved\",\n            evidence=[]  # No evidence!\n        ),\n        JudgeOpinion(\n            judge_id=\"tech_lead\",\n            score=5,\n            argument=\"Excellent architecture, scalable design\",\n            evidence=[\"architecture.md\", \"design.png\"]\n        ),\n    ]\n\n# Test the engine\nengine = SynthesisEngine()\nengine.add_rule(security_override)\nengine.add_rule(dissent_rule)  # Must have 2+ judges agree\n\nopinions = generate_test_opinions()\nresult = engine.synthesize(opinions)\nprint(result)\n# Should: Security override triggers -> REJECTED",
+              "implementation": "Create synthetic test cases: 1) Generate various judge opinion combinations, 2) Test each rule triggers correctly, 3) Verify final verdicts.",
+              "notes": "Synthetic testing reveals edge cases in your synthesis logic.",
+              "video": "https://www.youtube.com/watch?v=QB9p8xX6Fo0"
+            },
+            {
+              "type": "testing",
+              "title": "Testing Ideas",
+              "items": [
+                {
+                  "description": "Test rule overrides with sample opinions"
+                }
+              ],
+              "code": "import pytest\nfrom synthesis_engine import SynthesisEngine, JudgeOpinion, Verdict\n\ndef test_security_override_triggers():\n    \"\"\"Security issues should override other opinions\"\"\"\n    opinions = [\n        JudgeOpinion(\"p\", 5, \"Great code\", []),\n        JudgeOpinion(\"d\", 4, \"Minor issues\", []),\n        JudgeOpinion(\"t\", 1, \"SQL injection vulnerability\", []),\n    ]\n    \n    engine = SynthesisEngine()\n    engine.add_rule(security_override)\n    \n    result = engine.synthesize(opinions)\n    assert result['verdict'] == Verdict.REJECTED\n\ndef test_dissent_requires_majority():\n    \"\"\"Dissent needs at least 2 judges to agree\"\"\"\n    opinions = [\n        JudgeOpinion(\"p\", 1, \"bad\", []),\n        JudgeOpinion(\"d\", 5, \"good\", []),\n        JudgeOpinion(\"t\", 5, \"good\", []),\n    ]\n    \n    result = engine.synthesize(opinions)\n    assert result['verdict'] == Verdict.APPROVED  # 2 vs 1\n\ndef test_no_evidence_overruled():\n    \"\"\"Claims without evidence should be overruled\"\"\"\n    opinions = [\n        JudgeOpinion(\"p\", 5, \"Deep metacognition\", []),  # No evidence!\n        JudgeOpinion(\"d\", 5, \"Great\", []),\n    ]\n    \n    result = engine.synthesize(opinions)\n    assert result['final_score'] < 5  # Should be capped",
+              "implementation": "Write tests for synthesis rules: 1) Security override, 2) Dissent handling, 3) Evidence requirements, 4) Score capping.",
+              "notes": "Comprehensive testing ensures your synthesis engine behaves correctly in all scenarios.",
+              "video": ""
+            }
+          ],
+          "extras": [
+            { "title": "Security Overrides", "type": "bonus" },
+            { "title": "Dissent Handling", "type": "bonus" }
+          ]
+        },
+        {
+          "id": "integration-testing",
+          "title": "Integration Testing",
+          "description": "End-to-end validation of the complete AI orchestration system",
+          "duration": "1 week",
+          "sections": [
+            {
+              "type": "learning-objectives",
+              "title": "What to learn",
+              "content": [
+                "Multi-agent integration",
+                "Synthetic repo testing"
+              ]
+            },
+            {
+              "type": "resources",
+              "title": "Testing",
+              "items": [
+                {
+                  "description": "Create synthetic repos for testing"
+                }
+              ]
+            },
+            {
+              "type": "creative-learning",
+              "title": "Creative Learning",
+              "items": [
+                {
+                  "method": "Pair Programming",
+                  "description": "Review peer modules"
+                },
+                {
+                  "method": "Micro-Challenges",
+                  "description": "Daily feature completion"
+                }
+              ]
+            }
+          ],
+          "extras": [
+            { "title": "E2E Pipelines", "type": "bonus" }
+          ]
+        }
+      ]
+    }
+  ]
+}

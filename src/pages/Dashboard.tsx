@@ -37,7 +37,6 @@ const statButtons = [
 
 const quickActions = [
   { label: "Continue Learning", icon: Play, link: "/learn", color: "text-[hsl(0,84%,55%)]", bg: "bg-[hsl(0,84%,55%)]/10", border: "border-[hsl(0,84%,55%)]/30" },
-  { label: "View Schedule", icon: Clock, link: "/meetings", color: "text-blue-500", bg: "bg-blue-500/10", border: "border-blue-500/30" },
   { label: "Ask AI Tutor", icon: MessageSquare, link: "/chat", color: "text-green-500", bg: "bg-green-500/10", border: "border-green-500/30" },
 ];
 

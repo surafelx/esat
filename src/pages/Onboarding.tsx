@@ -174,16 +174,19 @@ const Onboarding = () => {
 
   const slideVariants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 300 : -300,
+      x: direction > 0 ? 500 : -500,
       opacity: 0,
+      scale: 0.95,
     }),
     center: {
       x: 0,
       opacity: 1,
+      scale: 1,
     },
     exit: (direction: number) => ({
-      x: direction < 0 ? 300 : -300,
+      x: direction < 0 ? 500 : -500,
       opacity: 0,
+      scale: 0.95,
     }),
   };
 
@@ -382,8 +385,8 @@ const Onboarding = () => {
                 transition={{ delay: 1.3 + index * 0.1 }}
                 className={`w-full p-5 rounded-2xl border-2 text-left transition-all flex items-center gap-4 group ${
                   formData.role === path.id
-                    ? "border-white bg-white/5"
-                    : "border-white/20 hover:border-white/40 hover:bg-white/5"
+                    ? "border-[hsl(0,84%,55%)] bg-[hsl(0,84%,55%)]/10 shadow-glow"
+                    : "border-white/20 hover:border-white/40 hover:bg-white/5 hover:border-[hsl(0,84%,55%)]/30"
                 }`}
               >
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
@@ -397,9 +400,9 @@ const Onboarding = () => {
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="w-6 h-6 rounded-full bg-white flex items-center justify-center"
+                    className="w-6 h-6 rounded-full bg-[hsl(0,84%,55%)] flex items-center justify-center"
                   >
-                    <Check className="w-4 h-4 text-black" />
+                    <Check className="w-4 h-4 text-white" />
                   </motion.div>
                 )}
               </motion.button>
@@ -559,21 +562,40 @@ const Onboarding = () => {
         />
       </div>
 
-      {/* Progress bar */}
+      {/* Progress bar - Typeform style with smooth animation */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-white/5 z-50">
         <motion.div 
           className="h-full bg-gradient-to-r from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)]"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.5 }}
+          transition={{ 
+            duration: 0.5, 
+            ease: [0.22, 1, 0.36, 1] // Smooth ease-out
+          }}
         />
       </div>
 
-      {/* Question counter */}
-      <div className="fixed top-4 right-6 z-50">
-        <p className="text-gray-500 text-sm font-medium">
-          {currentQuestion + 1} / {totalQuestions}
-        </p>
+      {/* Question counter with Typeform-style dots */}
+      <div className="fixed top-4 right-6 z-50 flex items-center gap-2">
+        {Array.from({ length: Math.min(totalQuestions, 8) }).map((_, i) => (
+          <motion.div 
+            key={i}
+            className={`h-1.5 rounded-full transition-all ${
+              i === currentQuestion 
+                ? "bg-[hsl(0,84%,55%)] w-6" 
+                : i < currentQuestion 
+                  ? "bg-white/40 w-1.5" 
+                  : "bg-white/20 w-1.5"
+            }`}
+            animate={{ 
+              width: i === currentQuestion ? 24 : 6
+            }}
+            transition={{ duration: 0.3 }}
+          />
+        ))}
+        {totalQuestions > 8 && (
+          <span className="text-gray-500 text-xs ml-1">+{totalQuestions - 8}</span>
+        )}
       </div>
 
       {/* Main content */}
@@ -588,7 +610,8 @@ const Onboarding = () => {
             exit="exit"
             transition={{ 
               x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.2 }
+              opacity: { duration: 0.2 },
+              scale: { duration: 0.3 }
             }}
             className="relative z-10 w-full max-w-5xl"
           >
@@ -597,8 +620,8 @@ const Onboarding = () => {
         </AnimatePresence>
       </div>
 
-      {/* Navigation footer - positioned higher */}
-      <div className="fixed bottom-8 left-0 right-0 px-4 z-40">
+      {/* Navigation footer - positioned higher for Typeform-style UX */}
+      <div className="fixed bottom-6 left-0 right-0 px-4 z-40">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <Button
             variant="ghost"
@@ -610,15 +633,19 @@ const Onboarding = () => {
             Back
           </Button>
 
-          <div className="flex gap-1 md:hidden">
+          <div className="flex gap-1.5 md:hidden">
             {Array.from({ length: totalQuestions }).map((_, i) => (
               <motion.div 
                 key={i}
-                className={`h-2 rounded-full transition-all ${
+                className={`h-1.5 rounded-full transition-all ${
                   i <= currentQuestion 
-                    ? "bg-[hsl(0,84%,55%)] w-8" 
-                    : "bg-white/20 w-2"
+                    ? "bg-[hsl(0,84%,55%)]" 
+                    : "bg-white/20"
                 }`}
+                animate={{ 
+                  width: i === currentQuestion ? 24 : 6
+                }}
+                transition={{ duration: 0.3 }}
               />
             ))}
           </div>

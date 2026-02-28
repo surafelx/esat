@@ -1,8 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
-  BookOpen, MessageSquare, Users, ClipboardCheck, 
-  LayoutDashboard, Flame, Home, Video
+  BookOpen, MessageSquare, ClipboardCheck, 
+  LayoutDashboard, Flame, Home
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -10,9 +10,7 @@ const navItems = [
   { path: "/", label: "Home", icon: Home },
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { path: "/learn", label: "Learn", icon: BookOpen },
-  { path: "/meetings", label: "Meetings", icon: Video },
   { path: "/chat", label: "AI Tutor", icon: MessageSquare },
-  { path: "/community", label: "Community", icon: Users },
   { path: "/assignments", label: "Assignments", icon: ClipboardCheck },
 ];
 

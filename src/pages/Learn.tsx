@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import coursesData from "@/data/courses.json";
 import { sileo } from "sileo";
 
@@ -22,16 +23,13 @@ const iconMap: Record<string, React.ComponentType<any>> = {
 type ViewState = "courses" | "modules" | "roadmap" | "lesson";
 
 const Learn = () => {
+  const navigate = useNavigate();
   const [view, setView] = useState<ViewState>("courses");
   const [selectedCourse, setSelectedCourse] = useState<any>(null);
   const [selectedModule, setSelectedModule] = useState<any>(null);
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
   const [totalXP, setTotalXP] = useState(0);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
-  const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
-  const [showQuiz, setShowQuiz] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [showProject, setShowProject] = useState(false);
 
   // Get courses from JSON
   const courses = coursesData.courses;
@@ -49,9 +47,6 @@ const Learn = () => {
   const handleLessonSelect = (index: number) => {
     setCurrentLessonIndex(index);
     setView("lesson");
-    setShowQuiz(false);
-    setQuizScore(null);
-    setShowProject(false);
   };
 
   const handleBack = () => {
@@ -99,24 +94,6 @@ const Learn = () => {
     // Move to next lesson if available
     if (currentLessonIndex < selectedModule.lessons.length - 1) {
       setCurrentLessonIndex(prev => prev + 1);
-    }
-  };
-
-  const handleQuizSubmit = () => {
-    const lesson = selectedModule?.lessons[currentLessonIndex];
-    if (!lesson?.content?.quiz) return;
-
-    const quiz = lesson.content.quiz;
-    let correct = 0;
-    quiz.questions.forEach((q: any, i: number) => {
-      if (quizAnswers[i] === q.correctIndex) correct++;
-    });
-
-    const score = Math.round((correct / quiz.questions.length) * 100);
-    setQuizScore(score);
-
-    if (score >= 70) {
-      addXP(XP_PER_QUIZ);
     }
   };
 
@@ -579,83 +556,23 @@ const Learn = () => {
                           </div>
                         )}
 
-                        {/* Quiz Section */}
-                        {selectedModule.lessons[currentLessonIndex].content?.quiz && !showQuiz && (
+                        {/* Quiz Section - Navigate to Quiz Page */}
+                        {selectedModule.lessons[currentLessonIndex].content?.quiz && (
                           <div className="p-5 border-t border-border/50">
                             <Button
-                              onClick={() => setShowQuiz(true)}
+                              onClick={() => navigate('/quiz', { 
+                                state: { 
+                                  quizData: {
+                                    lessonTitle: selectedModule.lessons[currentLessonIndex].title,
+                                    questions: selectedModule.lessons[currentLessonIndex].content.quiz.questions
+                                  }
+                                } 
+                              })}
                               className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-white"
                             >
                               <Gamepad2 className="w-4 h-4 mr-2" />
                               Take Quiz (+{XP_PER_QUIZ} XP)
                             </Button>
-                          </div>
-                        )}
-
-                        {/* Quiz View */}
-                        {showQuiz && selectedModule.lessons[currentLessonIndex].content?.quiz && (
-                          <div className="p-5 border-t border-border/50 bg-yellow-500/5">
-                            <div className="flex items-center justify-between mb-4">
-                              <h4 className="text-base font-semibold text-foreground">Quick Quiz</h4>
-                              <button onClick={() => setShowQuiz(false)} className="p-1 hover:bg-muted rounded">
-                                <X className="w-4 h-4 text-muted-foreground" />
-                              </button>
-                            </div>
-
-                            {quizScore === null ? (
-                              <div className="space-y-4">
-                                {selectedModule.lessons[currentLessonIndex].content.quiz.questions.map((question: any, qIndex: number) => (
-                                  <div key={qIndex} className="space-y-2">
-                                    <p className="text-sm font-medium text-foreground">{qIndex + 1}. {question.question}</p>
-                                    <div className="space-y-1">
-                                      {question.options.map((option: string, oIndex: number) => (
-                                        <button
-                                          key={oIndex}
-                                          onClick={() => setQuizAnswers({ ...quizAnswers, [qIndex]: oIndex })}
-                                          className={`w-full p-3 text-left text-sm rounded-lg border transition-all ${
-                                            quizAnswers[qIndex] === oIndex
-                                              ? "border-[hsl(0,84%,55%)] bg-[hsl(0,84%,55%)]/10 text-foreground"
-                                              : "border-border hover:border-[hsl(0,84%,55%)]/50 text-muted-foreground"
-                                          }`}
-                                        >
-                                          {option}
-                                        </button>
-                                      ))}
-                                    </div>
-                                  </div>
-                                ))}
-                                <Button
-                                  onClick={handleQuizSubmit}
-                                  disabled={Object.keys(quizAnswers).length < selectedModule.lessons[currentLessonIndex].content.quiz.questions.length}
-                                  className="w-full mt-4 bg-[hsl(0,84%,55%)] hover:bg-[hsl(0,84%,45%)]"
-                                >
-                                  Submit Quiz
-                                </Button>
-                              </div>
-                            ) : (
-                              <div className="text-center py-4">
-                                <div className={`text-3xl font-bold mb-2 ${quizScore >= 70 ? 'text-green-500' : 'text-red-500'}`}>
-                                  {quizScore}%
-                                </div>
-                                <p className="text-sm text-muted-foreground mb-4">
-                                  {quizScore >= 70 ? '🎉 Great job! You passed!' : '📚 Review the lesson and try again.'}
-                                </p>
-                                {quizScore >= 70 && (
-                                  <p className="text-sm text-[hsl(0,84%,55%)]">+{XP_PER_QUIZ} XP earned!</p>
-                                )}
-                                <Button
-                                  onClick={() => {
-                                    setShowQuiz(false);
-                                    setQuizScore(null);
-                                    setQuizAnswers({});
-                                  }}
-                                  className="mt-4"
-                                  variant="outline"
-                                >
-                                  Continue
-                                </Button>
-                              </div>
-                            )}
                           </div>
                         )}
                       </div>
