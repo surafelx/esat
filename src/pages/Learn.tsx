@@ -5,8 +5,9 @@ import {
   BookOpen, Lightbulb, MessageCircle, FileText, Gamepad2, Code, Clock, Zap, Trophy, Sparkles, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import coursesData from "@/data/courses.json";
+import { sileo } from "sileo";
 
 // XP constants
 const XP_PER_LESSON = 50;
@@ -26,8 +27,6 @@ const Learn = () => {
   const [selectedModule, setSelectedModule] = useState<any>(null);
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
   const [totalXP, setTotalXP] = useState(0);
-  const [showXPAnimation, setShowXPAnimation] = useState(false);
-  const [xpAmount, setXpAmount] = useState(0);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
   const [showQuiz, setShowQuiz] = useState(false);
@@ -67,11 +66,21 @@ const Learn = () => {
     }
   };
 
-  const addXP = (amount: number) => {
-    setXpAmount(amount);
-    setShowXPAnimation(true);
+  const addXP = async (amount: number) => {
     setTotalXP(prev => prev + amount);
-    setTimeout(() => setShowXPAnimation(false), 2000);
+    
+    // Show sileo toast notification
+    await sileo.promise(
+      new Promise((resolve) => setTimeout(resolve, 1500)),
+      {
+        loading: { title: `earning +${amount} XP...` },
+        success: { 
+          title: `+${amount} XP earned!`,
+          description: "Keep up the great work!"
+        },
+        error: { title: "Failed to earn XP" },
+      }
+    );
   };
 
   const completeLesson = () => {
@@ -345,23 +354,6 @@ const Learn = () => {
                   exit={{ opacity: 0, x: -20 }}
                   className="h-full flex flex-col relative"
                 >
-                  {/* XP Animation Overlay */}
-                  <AnimatePresence>
-                    {showXPAnimation && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.5 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -20, scale: 0.5 }}
-                        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
-                      >
-                        <div className="flex items-center gap-3 bg-gradient-to-r from-[hsl(0,84%,55%)] to-[hsl(25,95%,55%)] px-8 py-4 rounded-2xl shadow-2xl">
-                          <Sparkles className="w-8 h-8 text-white" />
-                          <span className="text-3xl font-bold text-white">+{xpAmount} XP</span>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
                   {/* Lesson Header - Clean & Simple */}
                   <div className="px-6 py-3 border-b border-border/50 shrink-0">
                     <div className="max-w-3xl mx-auto">
