@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { API_URL } from "@/lib/config";
+import { 
+  User, Mail, Shield, Zap, LogOut, Users, 
+  BookOpen, Award, ChevronRight, Crown
+} from "lucide-react";
 
 interface UserData {
   uid: string;
