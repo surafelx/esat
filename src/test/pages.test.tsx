@@ -10,7 +10,7 @@ const renderWithRouter = (component: React.ReactElement) => {
 describe("Login Page", () => {
   it("renders the login form", () => {
     renderWithRouter(<Login />);
-    expect(screen.getByText(/AI School - Login/)).toBeInTheDocument();
+    expect(screen.getByText(/ESAT/)).toBeInTheDocument();
   });
 
   it("has email input", () => {

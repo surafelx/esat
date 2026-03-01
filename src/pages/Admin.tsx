@@ -4,18 +4,10 @@ import { auth } from "@/lib/firebase";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { 
-  User, Mail, Shield, Zap, LogOut, ArrowLeft, 
-  Save, Trash2, Crown, BookOpen, UserPlus
-} from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { API_URL } from "@/lib/config";
+import { 
+  User, Shield, Zap, LogOut, ArrowLeft, Crown, BookOpen, Users
+} from "lucide-react";
 
 interface UserData {
   uid: string;
@@ -120,99 +112,146 @@ const Admin = () => {
 
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
-      case "admin": return "bg-purple-500";
-      case "instructor": return "bg-blue-500";
-      default: return "bg-green-500";
+      case "admin": return "bg-gradient-to-r from-purple-500 to-purple-600";
+      case "instructor": return "bg-gradient-to-r from-blue-500 to-blue-600";
+      default: return "bg-gradient-to-r from-green-500 to-green-600";
     }
   };
 
   if (loading || !currentUser) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-900">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
+          <p className="text-slate-400">Loading admin panel...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => navigate("/dashboard")}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Crown className="w-6 h-6 text-purple-500" />
-                Admin Panel
-              </h1>
-              <p className="text-gray-400">Manage users and roles</p>
+    <div className="min-h-screen bg-slate-900">
+      {/* Header */}
+      <div className="bg-slate-800/50 border-b border-slate-700">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button 
+                variant="ghost" 
+                onClick={() => navigate("/dashboard")}
+                className="text-slate-400 hover:text-white"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
+              </Button>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xl font-bold text-white">ESAT</span>
+              </div>
             </div>
+            <Button 
+              onClick={handleLogout} 
+              variant="ghost" 
+              className="text-slate-400 hover:text-white"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
           </div>
-          <Button onClick={handleLogout} variant="outline">
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </Button>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Page Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white flex items-center gap-3 mb-2">
+            <Crown className="w-8 h-8 text-yellow-500" />
+            Admin Panel
+          </h1>
+          <p className="text-slate-400">Manage users, roles, and platform settings</p>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <Card>
-            <CardContent className="p-4 text-center">
-              <User className="w-8 h-8 mx-auto text-blue-500 mb-2" />
-              <div className="text-2xl font-bold">{users.length}</div>
-              <div className="text-sm text-gray-500">Total Users</div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-3xl font-bold text-white">{users.length}</div>
+                  <div className="text-slate-400 text-sm">Total Users</div>
+                </div>
+                <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                  <Users className="w-6 h-6 text-blue-500" />
+                </div>
+              </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <Shield className="w-8 h-8 mx-auto text-purple-500 mb-2" />
-              <div className="text-2xl font-bold">{users.filter(u => u.role === "admin").length}</div>
-              <div className="text-sm text-gray-500">Admins</div>
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-3xl font-bold text-white">
+                    {users.filter(u => u.role === "admin").length}
+                  </div>
+                  <div className="text-slate-400 text-sm">Admins</div>
+                </div>
+                <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-purple-500" />
+                </div>
+              </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <BookOpen className="w-8 h-8 mx-auto text-green-500 mb-2" />
-              <div className="text-2xl font-bold">{users.filter(u => u.role === "instructor").length}</div>
-              <div className="text-sm text-gray-500">Instructors</div>
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-3xl font-bold text-white">
+                    {users.filter(u => u.role === "instructor").length}
+                  </div>
+                  <div className="text-slate-400 text-sm">Instructors</div>
+                </div>
+                <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
+                  <BookOpen className="w-6 h-6 text-green-500" />
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Users Table */}
-        <Card>
+        <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
-            <CardTitle>All Users</CardTitle>
-            <CardDescription>Click on a role to change it</CardDescription>
+            <CardTitle className="text-white">All Users</CardTitle>
+            <CardDescription className="text-slate-400">
+              Click on a role to change it
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-3 text-gray-400 font-medium">User</th>
-                    <th className="text-left p-3 text-gray-400 font-medium">Role</th>
-                    <th className="text-left p-3 text-gray-400 font-medium">XP</th>
-                    <th className="text-left p-3 text-gray-400 font-medium">Level</th>
-                    <th className="text-left p-3 text-gray-400 font-medium">Joined</th>
-                    <th className="text-left p-3 text-gray-400 font-medium">Actions</th>
+                  <tr className="border-b border-slate-700">
+                    <th className="text-left p-3 text-slate-400 font-medium">User</th>
+                    <th className="text-left p-3 text-slate-400 font-medium">Role</th>
+                    <th className="text-left p-3 text-slate-400 font-medium">XP</th>
+                    <th className="text-left p-3 text-slate-400 font-medium">Level</th>
+                    <th className="text-left p-3 text-slate-400 font-medium">Joined</th>
+                    <th className="text-left p-3 text-slate-400 font-medium">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {users.map((user) => (
-                    <tr key={user.uid} className="border-b hover:bg-gray-800">
+                    <tr key={user.uid} className="border-b border-slate-700/50 hover:bg-slate-700/30">
                       <td className="p-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
-                            <User className="w-4 h-4 text-white" />
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+                            <User className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <div className="text-white font-medium">{user.email}</div>
-                            <div className="text-xs text-gray-400">{user.uid}</div>
+                            <div className="text-xs text-slate-500">{user.uid.slice(0, 12)}...</div>
                           </div>
                         </div>
                       </td>
@@ -221,9 +260,8 @@ const Admin = () => {
                           value={user.role}
                           onChange={(e) => updateUserRole(user.uid, e.target.value)}
                           disabled={saving === user.uid}
-                          className={`px-3 py-1 rounded-full text-white text-sm cursor-pointer ${
-                            user.role === "admin" ? "bg-purple-500" :
-                            user.role === "instructor" ? "bg-blue-500" : "bg-green-500"
+                          className={`px-3 py-1.5 rounded-full text-white text-sm cursor-pointer ${
+                            getRoleBadgeColor(user.role)
                           }`}
                         >
                           <option value="student">Student</option>
@@ -231,9 +269,9 @@ const Admin = () => {
                           <option value="admin">Admin</option>
                         </select>
                       </td>
-                      <td className="p-3 text-white">{user.xp || 0}</td>
+                      <td className="p-3 text-white">{user.xp?.toLocaleString() || 0}</td>
                       <td className="p-3 text-white">{user.level || 1}</td>
-                      <td className="p-3 text-gray-400">
+                      <td className="p-3 text-slate-400">
                         {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}
                       </td>
                       <td className="p-3">
@@ -241,8 +279,10 @@ const Admin = () => {
                           variant="ghost" 
                           size="sm"
                           onClick={() => updateUserRole(user.uid, user.role === "admin" ? "student" : "admin")}
+                          disabled={saving === user.uid}
+                          className="text-slate-400 hover:text-white"
                         >
-                          {saving === user.uid ? "Saving..." : "Toggle Admin"}
+                          {saving === user.uid ? "Saving..." : "Toggle"}
                         </Button>
                       </td>
                     </tr>
@@ -251,7 +291,7 @@ const Admin = () => {
               </table>
               
               {users.length === 0 && (
-                <div className="text-center py-8 text-gray-400">
+                <div className="text-center py-12 text-slate-500">
                   No users found
                 </div>
               )}
