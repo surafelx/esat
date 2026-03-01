@@ -1,6 +1,5 @@
-const admin = require('firebase-admin');
+import admin from 'firebase-admin';
 
-// Firebase service account from environment variables
 const serviceAccount = {
   type: 'service_account',
   project_id: process.env.FIREBASE_PROJECT_ID,
@@ -8,14 +7,11 @@ const serviceAccount = {
   client_email: process.env.FIREBASE_CLIENT_EMAIL,
 };
 
-// Initialize Firebase Admin
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
   });
 }
 
-const auth = admin.auth();
-const db = admin.firestore();
-
-module.exports = { auth, db };
+export const auth = admin.auth();
+export const db = admin.firestore();
