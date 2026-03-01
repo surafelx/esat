@@ -6,12 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { API_URL } from "@/lib/config";
 import { 
   User, Mail, BookOpen, Zap, LogOut, ArrowLeft, 
   GraduationCap, Users, FileText, BarChart3, Plus
 } from "lucide-react";
-
-const API_URL = "http://localhost:3000";
 
 interface StudentData {
   uid: string;

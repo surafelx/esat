@@ -11,7 +11,11 @@ import {
   Save, Trash2, Crown, BookOpen, UserPlus
 } from "lucide-react";
 
-const API_URL = "http://localhost:3000";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { API_URL } from "@/lib/config";
 
 interface UserData {
   uid: string;
