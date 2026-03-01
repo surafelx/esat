@@ -101,7 +101,7 @@ router.put('/profile', verifyToken, async (req: AuthRequest, res: Response): Pro
       }
     }
 
-    const profile = await updateUserProfile(req.user!.uid, updates as any);
+    const profile = await updateUserProfile(req.user!.uid, updates);
     res.json(profile);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';

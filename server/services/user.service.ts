@@ -67,10 +67,10 @@ export async function addXP(uid: string, xpAmount: number): Promise<UserProfile 
 }
 
 export async function getAllUsers(role?: string | null): Promise<UserProfile[]> {
-  let query = db.collection('users');
+  let query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db.collection('users');
   
   if (role) {
-    query = query.where('role', '==', role) as any;
+    query = query.where('role', '==', role);
   }
   
   const snapshot = await query.get();

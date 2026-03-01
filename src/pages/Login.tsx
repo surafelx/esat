@@ -7,9 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 import { API_URL } from "@/lib/config";
 
 const Login = () => {
@@ -72,23 +69,24 @@ const Login = () => {
       
       // Login successful - will redirect due to auth state change
       navigate("/dashboard");
-    } catch (err: any) {
-      if (err.code === "auth/invalid-email") {
+    } catch (err) {
+      const error = err as { code?: string; message?: string };
+      if (error.code === "auth/invalid-email") {
         setError("Invalid email address");
-      } else if (err.code === "auth/user-not-found") {
+      } else if (error.code === "auth/user-not-found") {
         setError("No user found with this email");
-      } else if (err.code === "auth/wrong-password") {
+      } else if (error.code === "auth/wrong-password") {
         setError("Incorrect password");
-      } else if (err.code === "auth/invalid-credential") {
+      } else if (error.code === "auth/invalid-credential") {
         setError("Invalid email or password");
-      } else if (err.code === "auth/email-already-in-use") {
+      } else if (error.code === "auth/email-already-in-use") {
         setError("Email already registered");
-      } else if (err.code === "auth/weak-password") {
+      } else if (error.code === "auth/weak-password") {
         setError("Password is too weak");
-      } else if (err.code === "auth/network-request-failed") {
+      } else if (error.code === "auth/network-request-failed") {
         setError("Network error. Check your connection");
       } else {
-        setError(err.message);
+        setError(error.message || "An error occurred");
       }
     } finally {
       setLoading(false);
