@@ -13,7 +13,7 @@
     "test:watch": "vitest",
     "server": "node server.js",
     "start": "node server.js",
-    "finish": "npm run lint && npm run test && git add -A && git commit -m \"$(git diff --cached --stat)\" && git push",
+    "finish": "npm run lint && npm run test && npm run build && git add -A && git commit -m \"$(git diff --cached --stat)\" && git push",
     "server:install": "cd server && npm install",
     "server:dev": "cd server && npm run dev",
     "server:test": "cd server && npm test"
